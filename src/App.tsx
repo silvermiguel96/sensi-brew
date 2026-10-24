@@ -14,7 +14,7 @@ const BeerStylePage = lazy(() =>
 
 function PageFallback() {
   return (
-    <div className="mx-auto flex h-[60vh] w-full max-w-4xl items-center justify-center px-4">
+    <div className="mx-auto flex h-[60vh] w-full max-w-6xl items-center justify-center px-4">
       <span className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-800 border-t-amber-400" />
     </div>
   )
@@ -23,7 +23,7 @@ function PageFallback() {
 function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 w-full max-w-4xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
           <span className="grid h-8 w-8 place-items-center rounded-md bg-amber-500 text-zinc-950 shadow-[0_0_40px_rgba(251,191,36,0.08)]">
             <Beer className="h-4.5 w-4.5" />

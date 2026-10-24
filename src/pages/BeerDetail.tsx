@@ -49,7 +49,7 @@ export function BeerDetail() {
         animate={{ opacity: 1 }}
         exit={reduceMotion ? undefined : { opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="mx-auto w-full max-w-4xl px-4 pt-6 pb-20 sm:px-6"
+        className="mx-auto w-full max-w-6xl px-4 pt-6 pb-20 sm:px-6"
       >
         {/* Volver */}
         <Link

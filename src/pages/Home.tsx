@@ -10,7 +10,7 @@ export function Home() {
     useBeers()
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 pt-8 pb-20 sm:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-8 pb-20 sm:px-6">
       {/* Hero */}
       <motion.header
         initial={reduceMotion ? false : { opacity: 0, y: 16 }}
@@ -90,7 +90,7 @@ export function Home() {
       </p>
 
       {results.length > 0 ? (
-        <motion.div layout className="grid gap-4 sm:grid-cols-2">
+        <motion.div layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {results.map((beer, i) => (
               <BeerCard key={beer.id} beer={beer} index={i} />

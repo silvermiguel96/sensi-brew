@@ -19,7 +19,7 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
   const { abv, ibu, temperaturaServicio } = style.rangosTecnicos
 
   return (
-    <article className="mx-auto w-full max-w-4xl px-4 pt-6 pb-20 sm:px-6">
+    <article className="mx-auto w-full max-w-6xl px-4 pt-6 pb-20 sm:px-6">
       {/* ── Encabezado impactante ─────────────────────────────── */}
       <header className="glass-panel relative overflow-hidden rounded-2xl p-6 sm:p-8">
         <div

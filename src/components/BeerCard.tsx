@@ -32,7 +32,7 @@ export function BeerCard({ beer, index }: BeerCardProps) {
     >
       <Link
         to={`/estilo/${beer.id}`}
-        className="glass-panel group relative flex items-center gap-4 overflow-hidden rounded-2xl p-5 transition-colors duration-300 hover:border-white/10 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
+        className="glass-panel group relative flex items-center gap-3 overflow-hidden rounded-2xl p-4 transition-colors duration-300 hover:border-white/10 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none lg:gap-3.5"
       >
         {/* Resplandor del color SRM de la cerveza */}
         <div
@@ -51,7 +51,7 @@ export function BeerCard({ beer, index }: BeerCardProps) {
             <span className="truncate text-xs text-zinc-400">{beer.categoria}</span>
           </div>
 
-          <h3 className="mt-2 font-serif text-xl font-normal tracking-normal text-zinc-50 group-hover:text-amber-300">
+          <h3 className="mt-2 line-clamp-2 font-serif text-xl font-normal tracking-normal text-zinc-50 group-hover:text-amber-300">
             {beer.nombre_estilo}
           </h3>
 
@@ -82,7 +82,8 @@ export function BeerCard({ beer, index }: BeerCardProps) {
         <BeerGlass
           srm={srmMid}
           tipo={beer.tipo_vaso.tipo}
-          className="relative h-32 w-20 shrink-0"
+          bubbles={false}
+          className="relative h-32 w-20 shrink-0 lg:h-28 lg:w-16"
         />
 
         <ChevronRight className="relative h-5 w-5 shrink-0 text-zinc-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-amber-400" />

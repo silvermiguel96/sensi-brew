@@ -1,4 +1,5 @@
-import { useId } from 'react'
+import { useId, useRef } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { shade, srmToColor } from '../lib/srm'
 
 interface BeerGlassProps {
@@ -203,12 +204,24 @@ interface ContenidoProps {
   color: string
   bubbles: boolean
   foam: number
+  /** true cuando la copa se muestra llena (ya en vista o movimiento reducido). */
+  lleno: boolean
+  /** false si el usuario prefiere movimiento reducido: se pinta llena, sin animar. */
+  animar: boolean
 }
 
-/** Líquido, burbujas, espuma y brillo. El recorte del vaso lo pone el padre. */
-function Contenido({ color, bubbles, foam }: ContenidoProps) {
+/**
+ * Líquido, burbujas, espuma y brillo. El recorte del vaso lo pone el padre.
+ * Se revela de abajo hacia arriba (clip-path) simulando el llenado de la copa.
+ */
+function Contenido({ color, bubbles, foam, lleno, animar }: ContenidoProps) {
   return (
-    <>
+    <motion.div
+      className="absolute inset-0"
+      initial={animar ? { clipPath: 'inset(100% 0 0 0)' } : false}
+      animate={{ clipPath: lleno ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)' }}
+      transition={{ duration: 0.75, ease: [0.25, 1, 0.5, 1] }}
+    >
       <div
         className="absolute inset-x-0 bottom-0 h-[80%]"
         style={{
@@ -246,7 +259,7 @@ function Contenido({ color, bubbles, foam }: ContenidoProps) {
         style={{ top: `${foam + 5}%` }}
       />
       <div className="absolute inset-y-[18%] left-[14%] w-1 rounded-full bg-white/25 blur-[1px]" />
-    </>
+    </motion.div>
   )
 }
 
@@ -256,6 +269,12 @@ function Contenido({ color, bubbles, foam }: ContenidoProps) {
  */
 export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: BeerGlassProps) {
   const clipId = `vaso${useId().replace(/:/g, '')}`
+  const contenedorRef = useRef<HTMLDivElement>(null)
+  // La copa se llena al entrar en pantalla (una sola vez).
+  const enVista = useInView(contenedorRef, { once: true, amount: 0.4 })
+  const reduceMotion = useReducedMotion()
+  const lleno = Boolean(reduceMotion) || enVista
+  const animar = !reduceMotion
   const color = hex ?? srmToColor(srm ?? 8)
   const silueta = tipo ? SILUETAS[tipo] : undefined
   const etiqueta = tipo
@@ -267,11 +286,12 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
   if (!silueta) {
     return (
       <div
+        ref={contenedorRef}
         className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-white/10 bg-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
         role="img"
         aria-label={etiqueta}
       >
-        <Contenido color={color} bubbles={bubbles} foam={15} />
+        <Contenido color={color} bubbles={bubbles} foam={15} lleno={lleno} animar={animar} />
       </div>
     )
   }
@@ -279,7 +299,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
   const pie = silueta.pie ? PIE[silueta.pie] : undefined
 
   return (
-    <div className={`relative ${className}`} role="img" aria-label={etiqueta}>
+    <div ref={contenedorRef} className={`relative ${className}`} role="img" aria-label={etiqueta}>
       {pie && (
         <div
           className="absolute bottom-0 left-1/2 w-[64%] -translate-x-1/2"
@@ -323,7 +343,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
           clipPath: `url(#${clipId})`,
         }}
       >
-        <Contenido color={color} bubbles={bubbles} foam={silueta.foam} />
+        <Contenido color={color} bubbles={bubbles} foam={silueta.foam} lleno={lleno} animar={animar} />
         {!silueta.pie && (
           <div className="absolute inset-x-0 bottom-0 h-[11%] bg-zinc-200/40" aria-hidden />
         )}
