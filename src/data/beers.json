@@ -1,0 +1,310 @@
+[
+  {
+    "id": "1A",
+    "nombre_estilo": "American Light Lager",
+    "categoria": "Standard American Beer",
+    "guia_bjcp": "2021",
+    "estadisticas_vitales": {
+      "ibu": [8, 12],
+      "srm": [2, 3],
+      "abv": [2.8, 4.2]
+    },
+    "perfil_sensorial": {
+      "radar_intensidad": {
+        "amargor": 1,
+        "malta": 1,
+        "lupulo": 1,
+        "cuerpo": 1,
+        "carbonatacion": 5,
+        "esteres_frutales": 0
+      },
+      "apariencia": "Color pajizo muy pálido a amarillo pálido. Muy clara. Espuma blanca que rara vez persiste.",
+      "aroma": "Opcional aroma bajo a malta (grano, dulce o maíz). Opcional aroma bajo a lúpulo (especiado, floral o herbal).",
+      "sabor": "Paladar relativamente neutral con un final crujiente y seco. Sabor bajo a grano o maíz. Amargor bajo a muy bajo.",
+      "sensacion_boca": "Cuerpo muy ligero, a veces acuoso. Muy altamente carbonatada con ligero picor carbónico.",
+      "burbujas_descriptores": ["Crujiente", "Seca", "Acuosa", "Maíz", "Refrescante"]
+    },
+    "maridaje_gastronomico": [
+      {
+        "plato": "Ceviche de lenguado clásico peruano",
+        "ingredientes_clave": ["Lenguado", "Limón sutil", "Ají limo", "Cilantro"],
+        "justificacion_quimica": "La altísima carbonatación y el cuerpo acuoso limpian la capsaicina del ají y la acidez del limón sin competir con la delicada proteína del pescado blanco. La ausencia de ésteres o fenoles en la cerveza evita choques metálicos con el ácido cítrico."
+      }
+    ],
+    "platos_sugeridos": [
+      {
+        "nombre": "Ceviche mixto",
+        "categoria": "marisco",
+        "emoji": "🦐",
+        "afinidad": 5,
+        "principio": "Refresca el picor"
+      },
+      {
+        "nombre": "Chicharrón de cerdo",
+        "categoria": "carne",
+        "emoji": "🥓",
+        "afinidad": 4,
+        "principio": "Corta la grasa"
+      },
+      {
+        "nombre": "Queso fresco con aceituna",
+        "categoria": "queso",
+        "emoji": "🧀",
+        "afinidad": 3,
+        "principio": "Neutraliza la sal"
+      },
+      {
+        "nombre": "Tiradito de pescado",
+        "categoria": "marisco",
+        "emoji": "🐟",
+        "afinidad": 5,
+        "principio": "Limpia el paladar"
+      },
+      {
+        "nombre": "Sorbete de limón",
+        "categoria": "postre",
+        "emoji": "🍧",
+        "afinidad": 4,
+        "principio": "Prolonga la frescura"
+      },
+      {
+        "nombre": "Anticuchos",
+        "categoria": "carne",
+        "emoji": "🍢",
+        "afinidad": 3,
+        "principio": "Equilibra el ahumado"
+      }
+    ]
+  },
+  {
+    "id": "21A",
+    "nombre_estilo": "American IPA",
+    "categoria": "American IPA",
+    "guia_bjcp": "2021",
+    "estadisticas_vitales": {
+      "ibu": [40, 70],
+      "srm": [6, 14],
+      "abv": [5.5, 7.5]
+    },
+    "perfil_sensorial": {
+      "radar_intensidad": {
+        "amargor": 4.5,
+        "malta": 3,
+        "lupulo": 5,
+        "cuerpo": 3,
+        "carbonatacion": 3.5,
+        "esteres_frutales": 3
+      },
+      "apariencia": "Color dorado a ámbar. Espuma blanca de retención moderada a buena. Claridad variable, desde brillante hasta ligeramente turbia según el lúpulo.",
+      "aroma": "Dominante a lúpulo: cítrico, resinoso, tropical o floral, de intensidad moderada a alta. Notas malteadas de soporte (caramelo suave). Ésteres frutales bajos a moderados. Sin diacetilo ni acidez excesiva.",
+      "sabor": "Sabor a lúpulo prominente con amargor firme de los alfaácidos y soporte malteado moderado. Final seco a ligeramente amargo. Ésteres moderados que no dominan. Sin diacetilo.",
+      "sensacion_boca": "Cuerpo medio, sin pesadez. Carbonatación moderada. Amargor persistente y limpio, sin astringencia agresiva.",
+      "burbujas_descriptores": ["Amargor firme", "Cítrico", "Resinoso", "Tropical", "Seco"]
+    },
+    "maridaje_gastronomico": [
+      {
+        "plato": "Lomo saltado criollo",
+        "ingredientes_clave": ["Lomo de res", "Tomate", "Cebolla morada", "Ají amarillo", "Papa frita"],
+        "justificacion_quimica": "Los alfaácidos del lúpulo (iso-alfaácidos) se asocian a las grasas y reducen la sensación oleosa del salteado, mientras los tioles cítricos del lúpulo resuenan con el glutamato del tomate y potencian la percepción de sabor. El cuerpo medio sostiene la salsa sin enmascarar el ají amarillo."
+      }
+    ],
+    "platos_sugeridos": [
+      {
+        "nombre": "Hamburguesa con cheddar",
+        "categoria": "carne",
+        "emoji": "🍔",
+        "afinidad": 5,
+        "principio": "Corta la grasa"
+      },
+      {
+        "nombre": "Salmón a la parrilla",
+        "categoria": "marisco",
+        "emoji": "🐟",
+        "afinidad": 4,
+        "principio": "Resalta cítricos"
+      },
+      {
+        "nombre": "Queso azul",
+        "categoria": "queso",
+        "emoji": "🧀",
+        "afinidad": 4,
+        "principio": "Contrasta el amargor"
+      },
+      {
+        "nombre": "Camarones al ajillo",
+        "categoria": "marisco",
+        "emoji": "🦐",
+        "afinidad": 5,
+        "principio": "Limpia la mantequilla"
+      },
+      {
+        "nombre": "Tarta de limón",
+        "categoria": "postre",
+        "emoji": "🍋",
+        "afinidad": 3,
+        "principio": "Replica el cítrico"
+      },
+      {
+        "nombre": "Lomo saltado",
+        "categoria": "carne",
+        "emoji": "🥩",
+        "afinidad": 4,
+        "principio": "Equilibra el umami"
+      }
+    ]
+  },
+  {
+    "id": "20B",
+    "nombre_estilo": "American Stout",
+    "categoria": "Stout",
+    "guia_bjcp": "2021",
+    "estadisticas_vitales": {
+      "ibu": [35, 60],
+      "srm": [30, 40],
+      "abv": [5, 7]
+    },
+    "perfil_sensorial": {
+      "radar_intensidad": {
+        "amargor": 4,
+        "malta": 4.5,
+        "lupulo": 3.5,
+        "cuerpo": 4,
+        "carbonatacion": 3,
+        "esteres_frutales": 1.5
+      },
+      "apariencia": "Color negro opaco con reflejos rojizos o granate a contraluz. Espuma densa color crema tostado con buena retención.",
+      "aroma": "Notas tostadas intensas de café y chocolate, con malta caramelizada. Amargor a lúpulo moderado. Ésteres bajos a moderados (frutos oscuros). Sin diacetilo.",
+      "sabor": "Fuerte carácter malteado tostado con café, chocolate amargo y caramelo, respaldado por amargor firme de lúpulo. Final seco y persistente. Ésteres bajos. Sin diacetilo.",
+      "sensacion_boca": "Cuerpo medio a lleno, textura cremosa. Carbonatación moderada. Amargor de tostado y lúpulo persistente.",
+      "burbujas_descriptores": ["Tostado", "Café", "Chocolate", "Cremoso", "Lupulado"]
+    },
+    "maridaje_gastronomico": [
+      {
+        "plato": "Arroz con pato",
+        "ingredientes_clave": ["Pato", "Ají panca", "Cilantro", "Cebolla", "Arroz"],
+        "justificacion_quimica": "Los compuestos fenólicos del malteo tostado (pirazinas y melanoidinas) neutralizan la grasa saturada del pato mediante adsorción en boca, y el amargor de los alfaácidos corta el residuo graso. El café y chocolate del grano dialogan con el sofrito de ají panca sin pisar la frescura del cilantro."
+      }
+    ],
+    "platos_sugeridos": [
+      {
+        "nombre": "Brownie de chocolate amargo",
+        "categoria": "postre",
+        "emoji": "🍫",
+        "afinidad": 5,
+        "principio": "Suma cacao"
+      },
+      {
+        "nombre": "Costillas BBQ",
+        "categoria": "carne",
+        "emoji": "🍖",
+        "afinidad": 5,
+        "principio": "Neutraliza el dulzor"
+      },
+      {
+        "nombre": "Cheddar curado",
+        "categoria": "queso",
+        "emoji": "🧀",
+        "afinidad": 4,
+        "principio": "Corta la cremosidad"
+      },
+      {
+        "nombre": "Estofado de res",
+        "categoria": "carne",
+        "emoji": "🥘",
+        "afinidad": 4,
+        "principio": "Acompaña el tueste"
+      },
+      {
+        "nombre": "Ostiones frescos",
+        "categoria": "marisco",
+        "emoji": "🦪",
+        "afinidad": 3,
+        "principio": "Contrasta el tostado"
+      },
+      {
+        "nombre": "Helado de vainilla",
+        "categoria": "postre",
+        "emoji": "🍨",
+        "afinidad": 4,
+        "principio": "Suaviza el tostado"
+      }
+    ]
+  },
+  {
+    "id": "10A",
+    "nombre_estilo": "German Weissbier",
+    "categoria": "German Wheat Beer",
+    "guia_bjcp": "2021",
+    "estadisticas_vitales": {
+      "ibu": [8, 12],
+      "srm": [2, 6],
+      "abv": [4.3, 5.6]
+    },
+    "perfil_sensorial": {
+      "radar_intensidad": {
+        "amargor": 1.5,
+        "malta": 2.5,
+        "lupulo": 1,
+        "cuerpo": 3,
+        "carbonatacion": 4.5,
+        "esteres_frutales": 5
+      },
+      "apariencia": "Color pajizo a ámbar muy pálido, turbio por las levaduras en suspensión. Espuma blanca abundante, densa y de retención variable.",
+      "aroma": "Ésteres frutales intensos de plátano y clavo, con notas de trigo fresco y una acidez láctica suave. Lúpulo apenas perceptible. Sin diacetilo.",
+      "sabor": "Ésteres de plátano y clavo dominantes sobre una base de malta de trigo. Acidez láctica suave refrescante, amargor muy bajo, final seco y efervescente.",
+      "sensacion_boca": "Cuerpo medio ligero y sedoso. Muy alta carbonatación con sensación cremosa; efervescencia viva que renueva el paladar en cada sorbo.",
+      "burbujas_descriptores": ["Plátano", "Clavo", "Trigo", "Ácido suave", "Efervescente"]
+    },
+    "maridaje_gastronomico": [
+      {
+        "plato": "Chicharrón peruano con salsa de ají",
+        "ingredientes_clave": ["Cerdo", "Corteza caramelizada", "Limón", "Ají", "Cebolla"],
+        "justificacion_quimica": "El ácido carbónico y el ácido láctico emulsionan y saponifican parcialmente la grasa del chicharrón, limpiando el paladar entre bocados. Los ésteres isoamílicos a plátano contrastan con los aldehídos de la corteza caramelizada (Maillard), y el amargor casi nulo evita el amargor metálico que el lúpulo produciría frente al capsaicino del ají."
+      }
+    ],
+    "platos_sugeridos": [
+      {
+        "nombre": "Chicharrón peruano",
+        "categoria": "carne",
+        "emoji": "🥓",
+        "afinidad": 5,
+        "principio": "Corta la grasa"
+      },
+      {
+        "nombre": "Bratwurst a la parrilla",
+        "categoria": "carne",
+        "emoji": "🌭",
+        "afinidad": 5,
+        "principio": "Resalta el clavo"
+      },
+      {
+        "nombre": "Queso brie",
+        "categoria": "queso",
+        "emoji": "🧀",
+        "afinidad": 3,
+        "principio": "Envuelve la acidez"
+      },
+      {
+        "nombre": "Ceviche de trucha",
+        "categoria": "marisco",
+        "emoji": "🐟",
+        "afinidad": 3,
+        "principio": "Refresca la acidez"
+      },
+      {
+        "nombre": "Tarta de plátano",
+        "categoria": "postre",
+        "emoji": "🍌",
+        "afinidad": 4,
+        "principio": "Amplifica el plátano"
+      },
+      {
+        "nombre": "Strudel de manzana",
+        "categoria": "postre",
+        "emoji": "🥧",
+        "afinidad": 3,
+        "principio": "Equilibra el dulzor"
+      }
+    ]
+  }
+]

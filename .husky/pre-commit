@@ -1,0 +1,3 @@
+# Hook pre-commit: si el lint o el build fallan, el commit se aborta.
+# `npm run build` incluye el chequeo de tipos (tsc) y genera el service worker.
+npm run lint && npm run build

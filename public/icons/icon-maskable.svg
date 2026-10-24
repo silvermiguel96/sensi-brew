@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="beer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo full-bleed para recorte por máscaras del SO -->
+  <rect width="512" height="512" fill="#0c0a09"/>
+  <!-- Icono centrado dentro de la zona segura (60%) -->
+  <path d="M196 176h120l-13 168a40 40 0 0 1-40 37h-14a40 40 0 0 1-40-37z" fill="url(#beer)"/>
+  <ellipse cx="256" cy="184" rx="60" ry="16" fill="#f5efe3"/>
+  <rect x="316" y="210" width="40" height="100" rx="20" fill="none" stroke="url(#beer)" stroke-width="22"/>
+</svg>
