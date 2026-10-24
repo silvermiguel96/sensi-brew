@@ -1,0 +1,31 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "SensiBrew",
+    "identifier": "https://sensibrew.app",
+    "documentationUrl": "https://sensibrew.app/llms.txt"
+  },
+  "entries": [
+    {
+      "identifier": "urn:ai:sensibrew:catalog:bjcp-2021",
+      "displayName": "Catálogo Sensorial de Estilos BJCP 2021",
+      "description": "Base de datos y referencia sensorial de 127 estilos oficiales de cerveza BJCP 2021 con estadísticas vitales (IBU, SRM, ABV), descriptores organolépticos y maridajes gastronómicos.",
+      "type": "text/markdown",
+      "url": "https://sensibrew.app/llms.txt",
+      "representativeQueries": [
+        "¿Cuáles son los descriptores sensoriales y maridajes de una American Pale Ale 18B?",
+        "¿Qué rango de IBU y SRM tiene una Irish Stout?",
+        "Buscar maridajes recomendados para una cerveza lupulada según BJCP"
+      ],
+      "tags": ["cerveza", "bjcp", "maridaje", "sensorial", "ibu", "srm", "cata"]
+    },
+    {
+      "identifier": "urn:ai:sensibrew:sitemap",
+      "displayName": "Mapa de Sitio de Estilos de Cerveza",
+      "description": "Índice estructurado con las URLs de todos los estilos de cerveza disponibles en SensiBrew.",
+      "type": "application/xml",
+      "url": "https://sensibrew.app/sitemap.xml",
+      "tags": ["sitemap", "index"]
+    }
+  ]
+}

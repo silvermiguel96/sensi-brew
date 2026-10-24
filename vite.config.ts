@@ -1,15 +1,47 @@
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+
+function inlineCss(): Plugin {
+  return {
+    name: 'inline-css',
+    apply: 'build',
+    enforce: 'post',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        if (!ctx.bundle) return html
+        let newHtml = html
+        for (const [fileName, asset] of Object.entries(ctx.bundle)) {
+          if (fileName.endsWith('.css') && 'source' in asset) {
+            const cssContent =
+              typeof asset.source === 'string'
+                ? asset.source
+                : asset.source.toString()
+            const linkRegex = new RegExp(
+              `<link[^>]*href=["'][^"']*${fileName}["'][^>]*>`,
+              'i',
+            )
+            newHtml = newHtml.replace(linkRegex, `<style>${cssContent}</style>`)
+            delete ctx.bundle[fileName]
+          }
+        }
+        return newHtml
+      },
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    inlineCss(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'inline',
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'SensiBrew — Guía sensorial de cerveza BJCP 2021',

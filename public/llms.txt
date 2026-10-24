@@ -1,18 +1,21 @@
 # SensiBrew — Guía Sensorial de Estilos de Cerveza BJCP 2021
 
-> SensiBrew es una aplicación web progresiva (PWA) de referencia cervecera basada en las pautas oficiales BJCP 2021 (Beer Judge Certification Program). Diseñada para jueces, catadores, cerveceros caseros y amantes de la gastronomía. Funciona offline sin internet.
+> SensiBrew es una aplicación web progresiva (PWA) de referencia cervecera basada en las pautas oficiales BJCP 2021 (Beer Judge Certification Program). Proporciona perfiles sensoriales, estadísticas vitales (IBU, SRM, ABV), radares de intensidad y maridajes gastronómicos con justificación molecular. Funciona 100% offline sin necesidad de conexión a internet.
 
-## Capacidades y Contenido
-- **Catálogo de Estilos BJCP 2021**: Categorías, códigos de estilo, descriptores sensoriales (aroma, apariencia, sabor, sensación en boca).
-- **Estadísticas Vitales Oficiales**: Rangos técnicos de IBU (amargor), SRM / EBC (color), ABV (graduación alcohólica) y Densidad Original/Final.
-- **Gráficos Sensoriales Radar**: Evaluación visual de intensidades (amargor, malta, lúpulo, cuerpo, carbonatación, ésteres).
-- **Maridajes Gastronómicos**: Sugerencias de platos, quesos y postres con fundamentos de afinidad, contraste y corte graso.
-- **Guía de Cristalería**: Recomendaciones de servicio por estilo de vaso y copa cervecera.
+## Documentación y Enlaces Principales
 
-## Estructura del Sitio
-- Catálogo principal: `/`
-- Ficha de estilo BJCP: `/estilo/:id` (ej. `/estilo/18B` para American Pale Ale, `/estilo/21A` para American IPA)
+- [Catálogo General de Estilos](https://sensibrew.app/): Buscador instantáneo con 127 estilos cerveceros clasificados por categorías oficiales BJCP 2021.
+- [Sitemap Completo de Estilos](https://sensibrew.app/sitemap.xml): Listado XML de las 127 rutas individuales de estilos cerveceros para rastreadores e indexación profunda.
+- [Catálogo Agéntico de Recursos](https://sensibrew.app/.well-known/ai-catalog.json): Manifiesto estándar ARD (Agentic Resource Discovery) para agentes e IAs autónomas.
 
-## Vocabulario y Fuentes
-- Pautas de Estilos de Cerveza del BJCP (Beer Judge Certification Program) 2021.
-- Convenciones de color cervecero SRM (Standard Reference Method).
+## Estilos Destacados
+
+- [American Pale Ale (18B)](https://sensibrew.app/estilo/18B): Perfil sensorial aromático, balance hacia el lúpulo cítrico/floral y maridaje sugerido con hamburguesa artesanal y queso Cheddar madurado.
+- [American IPA (21A)](https://sensibrew.app/estilo/21A): Cerveza lupulada de alto amargor con notas a resina, frutas tropicales y corte graso gastronómico.
+- [Irish Stout (15B)](https://sensibrew.app/estilo/15B): Cerveza negra de fermentación alta con carácter tostado a café y maridaje por afinidad con ostras o postres de chocolate negro.
+
+## Capacidades del Sistema
+
+- **Estadísticas Vitales**: Rangos cuantitativos de amargor (IBU), color (SRM), densidad y alcohol por volumen (ABV).
+- **Evaluación Organoléptica**: Descriptores sensoriales segmentados en apariencia, aroma, sabor y sensación en boca.
+- **Maridajes Gastronómicos**: Interacción entre compuestos volátiles, corte graso, contraste y afinidad de sabores.
