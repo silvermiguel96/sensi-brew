@@ -1,7 +1,7 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import { Beer } from 'lucide-react'
+import { Beer, WifiOff } from 'lucide-react'
 import { Home } from './pages/Home'
 
 // Recharts solo se necesita en la vista de detalle => chunk aparte.
@@ -21,6 +21,19 @@ function PageFallback() {
 }
 
 function Header() {
+  const [offline, setOffline] = useState(!navigator.onLine)
+
+  useEffect(() => {
+    const handleOnline = () => setOffline(false)
+    const handleOffline = () => setOffline(true)
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -32,9 +45,21 @@ function Header() {
             Sensi<span className="text-amber-400">Brew</span>
           </span>
         </Link>
-        <span className="text-[11px] font-medium tracking-widest text-zinc-400 uppercase">
-          BJCP 2021
-        </span>
+        <div className="flex items-center gap-2.5">
+          {offline && (
+            <span
+              role="status"
+              aria-label="Modo offline activo"
+              className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300"
+            >
+              <WifiOff className="h-3 w-3" />
+              <span>Offline</span>
+            </span>
+          )}
+          <span className="text-[11px] font-medium tracking-widest text-zinc-400 uppercase">
+            BJCP 2021
+          </span>
+        </div>
       </div>
     </header>
   )

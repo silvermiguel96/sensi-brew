@@ -1,0 +1,18 @@
+# SensiBrew — Guía Sensorial de Estilos de Cerveza BJCP 2021
+
+> SensiBrew es una aplicación web progresiva (PWA) de referencia cervecera basada en las pautas oficiales BJCP 2021 (Beer Judge Certification Program). Diseñada para jueces, catadores, cerveceros caseros y amantes de la gastronomía. Funciona offline sin internet.
+
+## Capacidades y Contenido
+- **Catálogo de Estilos BJCP 2021**: Categorías, códigos de estilo, descriptores sensoriales (aroma, apariencia, sabor, sensación en boca).
+- **Estadísticas Vitales Oficiales**: Rangos técnicos de IBU (amargor), SRM / EBC (color), ABV (graduación alcohólica) y Densidad Original/Final.
+- **Gráficos Sensoriales Radar**: Evaluación visual de intensidades (amargor, malta, lúpulo, cuerpo, carbonatación, ésteres).
+- **Maridajes Gastronómicos**: Sugerencias de platos, quesos y postres con fundamentos de afinidad, contraste y corte graso.
+- **Guía de Cristalería**: Recomendaciones de servicio por estilo de vaso y copa cervecera.
+
+## Estructura del Sitio
+- Catálogo principal: `/`
+- Ficha de estilo BJCP: `/estilo/:id` (ej. `/estilo/18B` para American Pale Ale, `/estilo/21A` para American IPA)
+
+## Vocabulario y Fuentes
+- Pautas de Estilos de Cerveza del BJCP (Beer Judge Certification Program) 2021.
+- Convenciones de color cervecero SRM (Standard Reference Method).
