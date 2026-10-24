@@ -44,7 +44,7 @@ export function PairingTabs({ maridajes }: PairingTabsProps) {
         role="tablist"
         aria-label="Categorías de maridaje"
         onKeyDown={handleKeyDown}
-        className="inline-flex flex-wrap gap-1 rounded-2xl border border-slate-800 bg-slate-900/80 p-1.5"
+        className="inline-flex flex-wrap gap-1 rounded-full border border-white/10 bg-zinc-950/60 p-1.5"
       >
         {maridajes.map((m, i) => {
           const isActive = i === active
@@ -60,18 +60,18 @@ export function PairingTabs({ maridajes }: PairingTabsProps) {
               aria-controls={`panel-${m.categoria}`}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(i)}
-              className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
-                isActive ? 'text-slate-950' : 'text-slate-400 hover:text-slate-200'
+              className={`relative flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none ${
+                isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
               }`}
             >
               {isActive && (
                 <motion.span
                   layoutId="pairing-tab-indicator"
-                  className="absolute inset-0 rounded-xl bg-linear-to-r from-amber-500 to-yellow-500 shadow-[0_0_18px_rgba(245,158,11,0.35)]"
+                  className="absolute inset-0 rounded-full bg-amber-500"
                   transition={
                     reduceMotion
                       ? { duration: 0 }
-                      : { type: 'spring', stiffness: 380, damping: 32 }
+                      : { type: 'spring', stiffness: 300, damping: 30 }
                   }
                 />
               )}
@@ -95,7 +95,7 @@ export function PairingTabs({ maridajes }: PairingTabsProps) {
             initial={reduceMotion ? false : { opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, x: -16 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
           >
             <PairingCard
               pairing={seleccionado}

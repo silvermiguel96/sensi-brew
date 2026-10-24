@@ -39,7 +39,7 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
         role="tablist"
         aria-label="Descripción sensorial"
         onKeyDown={handleKeyDown}
-        className="flex flex-wrap gap-1 rounded-2xl border border-slate-800 bg-slate-900/70 p-1.5"
+        className="flex flex-wrap gap-1 rounded-full border border-white/10 bg-zinc-950/60 p-1.5"
       >
         {TABS.map((tab, i) => {
           const isActive = tab.key === active
@@ -56,18 +56,18 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
               aria-controls={`sensory-panel-${tab.key}`}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(tab.key)}
-              className={`relative flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2.5 py-2.5 text-xs font-bold whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none sm:text-sm ${
-                isActive ? 'text-slate-950' : 'text-slate-400 hover:text-slate-200'
+              className={`relative flex flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-2.5 text-xs font-bold whitespace-nowrap transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:text-sm ${
+                isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
               }`}
             >
               {isActive && (
                 <motion.span
                   layoutId="sensory-tab-indicator"
-                  className="absolute inset-0 rounded-xl bg-linear-to-r from-amber-500 to-yellow-500"
+                  className="absolute inset-0 rounded-full bg-amber-500"
                   transition={
                     reduceMotion
                       ? { duration: 0 }
-                      : { type: 'spring', stiffness: 380, damping: 32 }
+                      : { type: 'spring', stiffness: 300, damping: 30 }
                   }
                 />
               )}
@@ -90,9 +90,9 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
             initial={reduceMotion ? false : { opacity: 0, x: 14 }}
             animate={{ opacity: 1, x: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, x: -14 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
           >
-            <p className="text-pretty text-sm leading-relaxed text-slate-300">
+            <p className="text-pretty text-sm leading-relaxed text-zinc-300">
               {perfil[active]}
             </p>
           </motion.div>

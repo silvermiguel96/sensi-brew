@@ -25,45 +25,45 @@ export function BeerCard({ beer, index }: BeerCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
       transition={{
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
-        delay: reduceMotion ? 0 : Math.min(index, 8) * 0.04,
+        duration: 0.5,
+        ease: [0.25, 1, 0.5, 1],
+        delay: reduceMotion ? 0 : Math.min(index, 8) * 0.05,
       }}
     >
       <Link
         to={`/estilo/${beer.id}`}
-        className="glass-panel group relative flex items-center gap-4 overflow-hidden rounded-2xl p-5 transition-colors duration-300 hover:border-amber-400/40 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+        className="glass-panel group relative flex items-center gap-4 overflow-hidden rounded-2xl p-5 transition-colors duration-300 hover:border-white/10 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
       >
         {/* Resplandor del color SRM de la cerveza */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(120% 100% at 100% 0%, ${color}26, transparent 55%)`,
+            background: `radial-gradient(120% 100% at 100% 0%, ${color}14, transparent 55%)`,
           }}
         />
 
         <div className="relative min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="rounded-md bg-amber-400/15 px-1.5 py-0.5 text-xs font-bold text-amber-400 ring-1 ring-amber-400/30">
+            <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-xs font-bold text-amber-400">
               {beer.id}
             </span>
-            <span className="truncate text-xs text-slate-400">{beer.categoria}</span>
+            <span className="truncate text-xs text-zinc-400">{beer.categoria}</span>
           </div>
 
-          <h3 className="mt-2 text-lg font-bold tracking-tight text-slate-100 group-hover:text-amber-300">
+          <h3 className="mt-2 font-serif text-xl font-normal tracking-normal text-zinc-50 group-hover:text-amber-300">
             {beer.nombre_estilo}
           </h3>
 
-          <p className="mt-1 text-xs tabular-nums text-slate-300">
+          <p className="mt-1 text-xs tabular-nums text-zinc-400">
             IBU {textoRango(ibu)}
-            <span className="mx-1.5 text-slate-500">·</span>
+            <span className="mx-1.5 text-zinc-600">·</span>
             SRM {textoRango(srm)}
-            <span className="mx-1.5 text-slate-500">·</span>
+            <span className="mx-1.5 text-zinc-600">·</span>
             ABV {textoRango(abv)}
             {abv ? '%' : ''}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-zinc-400">
             {beer.tipo_vaso.tipo} · {beer.tipo_vaso.capacidad_ml} ml
           </p>
 
@@ -71,7 +71,7 @@ export function BeerCard({ beer, index }: BeerCardProps) {
             {beer.perfil_sensorial.burbujas_descriptores.slice(0, 3).map((d) => (
               <span
                 key={d}
-                className="rounded-full bg-slate-700/80 px-2 py-0.5 text-[11px] font-medium text-slate-300 ring-1 ring-slate-600"
+                className="rounded-full bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-zinc-400"
               >
                 {d}
               </span>
@@ -85,7 +85,7 @@ export function BeerCard({ beer, index }: BeerCardProps) {
           className="relative h-32 w-20 shrink-0"
         />
 
-        <ChevronRight className="relative h-5 w-5 shrink-0 text-slate-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-amber-400" />
+        <ChevronRight className="relative h-5 w-5 shrink-0 text-zinc-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-amber-400" />
       </Link>
     </motion.div>
   )

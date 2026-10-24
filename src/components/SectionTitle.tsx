@@ -16,16 +16,12 @@ export function SectionTitle({ icon, title, hint }: SectionTitleProps) {
       initial={reduceMotion ? false : { opacity: 0, x: -12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.8 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       className="mb-4 flex items-center gap-2.5"
     >
-      {icon && (
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-amber-400/12 text-amber-400 ring-1 ring-amber-400/25">
-          {icon}
-        </span>
-      )}
-      <h2 className="text-lg font-bold tracking-tight text-slate-100">{title}</h2>
-      {hint && <span className="text-xs text-slate-400">{hint}</span>}
+      {icon && <span className="text-amber-400">{icon}</span>}
+      <h2 className="text-lg font-semibold tracking-wide text-zinc-100">{title}</h2>
+      {hint && <span className="text-xs font-medium text-zinc-400">{hint}</span>}
     </motion.div>
   )
 }

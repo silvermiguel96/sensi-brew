@@ -6,7 +6,7 @@
     </linearGradient>
   </defs>
   <!-- Fondo full-bleed para recorte por máscaras del SO -->
-  <rect width="512" height="512" fill="#0c0a09"/>
+  <rect width="512" height="512" fill="#09090b"/>
   <!-- Icono centrado dentro de la zona segura (60%) -->
   <path d="M196 176h120l-13 168a40 40 0 0 1-40 37h-14a40 40 0 0 1-40-37z" fill="url(#beer)"/>
   <ellipse cx="256" cy="184" rx="60" ry="16" fill="#f5efe3"/>

@@ -267,7 +267,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
   if (!silueta) {
     return (
       <div
-        className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-slate-100/15 bg-slate-100/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
+        className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-white/10 bg-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
         role="img"
         aria-label={etiqueta}
       >
@@ -286,9 +286,9 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
           style={{ top: `${silueta.top + silueta.height - 2}%` }}
           aria-hidden
         >
-          <div className={`mx-auto h-[88%] bg-slate-200/60 ${pie.vara}`} />
+          <div className={`mx-auto h-[88%] bg-zinc-200/50 ${pie.vara}`} />
           <div
-            className={`absolute bottom-0 left-1/2 h-[14%] -translate-x-1/2 rounded-[50%] bg-slate-200/75 ${pie.base}`}
+            className={`absolute bottom-0 left-1/2 h-[14%] -translate-x-1/2 rounded-[50%] bg-zinc-200/60 ${pie.base}`}
           />
         </div>
       )}
@@ -296,7 +296,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
       {silueta.asa && (
         <div
           aria-hidden
-          className="absolute rounded-r-full border-y-2 border-r-2 border-slate-200/70"
+          className="absolute rounded-r-full border-y-2 border-r-2 border-zinc-200/60"
           style={{
             left: `${silueta.left + silueta.width - 6}%`,
             top: `${silueta.top + silueta.height * (silueta.asa === 'grande' ? 0.22 : 0.18)}%`,
@@ -314,7 +314,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
         </defs>
       </svg>
       <div
-        className="absolute overflow-hidden bg-slate-100/10"
+        className="absolute overflow-hidden bg-white/5"
         style={{
           top: `${silueta.top}%`,
           height: `${silueta.height}%`,
@@ -325,7 +325,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
       >
         <Contenido color={color} bubbles={bubbles} foam={silueta.foam} />
         {!silueta.pie && (
-          <div className="absolute inset-x-0 bottom-0 h-[11%] bg-slate-200/45" aria-hidden />
+          <div className="absolute inset-x-0 bottom-0 h-[11%] bg-zinc-200/40" aria-hidden />
         )}
       </div>
       <svg
@@ -343,7 +343,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
         <path
           d={silueta.d}
           fill="none"
-          stroke="rgba(248,250,252,0.8)"
+          stroke="rgba(250,250,250,0.7)"
           strokeWidth="1.4"
           vectorEffect="non-scaling-stroke"
           strokeLinejoin="round"

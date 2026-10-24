@@ -21,10 +21,10 @@ function DishCard({ plato, index }: DishCardProps) {
       data-dish-card
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
+      transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1], delay: index * 0.05 }}
       whileHover={reduceMotion ? undefined : { scale: 1.02, y: -4 }}
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-      className="group w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl border border-slate-800 bg-slate-800/60 shadow-lg shadow-slate-950/40 transition-shadow hover:shadow-xl hover:shadow-slate-950/60 sm:w-[270px]"
+      className="glass-panel group w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl transition-colors hover:border-white/10 sm:w-[270px]"
     >
       {/* "Imagen" del plato */}
       <div
@@ -37,7 +37,7 @@ function DishCard({ plato, index }: DishCardProps) {
         </span>
 
         {/* Brillo / reflejo */}
-        <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-slate-950/45 via-transparent to-white/15" />
+        <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-zinc-950/60 via-transparent to-white/10" />
 
         {/* Categoría */}
         <span
@@ -49,7 +49,7 @@ function DishCard({ plato, index }: DishCardProps) {
 
         {/* Afinidad */}
         <div
-          className="absolute right-2.5 bottom-2.5 flex items-end gap-1 rounded-full bg-slate-950/55 px-2 py-1 backdrop-blur-sm"
+          className="absolute right-2.5 bottom-2.5 flex items-end gap-1 rounded-full bg-zinc-950/60 px-2 py-1 backdrop-blur-sm"
           role="img"
           aria-label={`Afinidad ${plato.afinidad} de 5`}
         >
@@ -67,13 +67,13 @@ function DishCard({ plato, index }: DishCardProps) {
 
       {/* Contenido */}
       <div className="p-4">
-        <h3 className="text-sm leading-snug font-bold text-slate-50">{plato.nombre}</h3>
+        <h3 className="text-sm leading-snug font-bold text-zinc-50">{plato.nombre}</h3>
 
         <motion.span
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 + index * 0.05 }}
-          className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200 transition-colors group-hover:border-amber-400/50 group-hover:bg-amber-500/15"
+          transition={{ duration: 0.5, delay: 0.05 + index * 0.05 }}
+          className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200 transition-colors group-hover:bg-amber-500/15"
         >
           <Sparkles className="h-3 w-3 text-amber-400" />
           {plato.principio}
@@ -130,14 +130,14 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
           <button
             onClick={() => move(-1)}
             aria-label="Platos anteriores"
-            className="grid h-9 w-9 place-items-center rounded-full border border-slate-700 bg-slate-800/80 text-slate-300 transition-colors hover:border-amber-400/50 hover:text-amber-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:text-amber-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => move(1)}
             aria-label="Más platos"
-            className="grid h-9 w-9 place-items-center rounded-full border border-slate-700 bg-slate-800/80 text-slate-300 transition-colors hover:border-amber-400/50 hover:text-amber-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:text-amber-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -162,8 +162,8 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
             onClick={() => goTo(i)}
             aria-label={`Ir al plato ${i + 1}: ${plato.nombre}`}
             aria-current={i === active}
-            className={`h-1.5 rounded-full transition-all duration-300 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
-              i === active ? 'w-6 bg-amber-400' : 'w-1.5 bg-slate-600 hover:bg-slate-500'
+            className={`h-1.5 rounded-full transition-all duration-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none ${
+              i === active ? 'w-6 bg-amber-500' : 'w-1.5 bg-zinc-700 hover:bg-zinc-600'
             }`}
           />
         ))}

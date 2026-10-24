@@ -32,18 +32,18 @@ function VitalStat({
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-slate-300 uppercase">
+        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-zinc-400 uppercase">
           {icon}
           {label}
         </span>
-        <span className="text-sm font-bold text-slate-100 tabular-nums">
+        <span className="text-sm font-medium text-zinc-100 tabular-nums">
           {format(min)}–{format(maxVal)}{' '}
-          <span className="font-medium text-slate-400">{unit}</span>
+          <span className="font-medium text-zinc-400">{unit}</span>
         </span>
       </div>
 
       <div
-        className="relative h-2.5 overflow-hidden rounded-full bg-slate-700 ring-1 ring-slate-600/60"
+        className="relative h-2.5 overflow-hidden rounded-full bg-zinc-800 ring-1 ring-white/10"
         style={trackStyle}
       >
         <motion.div
@@ -52,7 +52,7 @@ function VitalStat({
           initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
           whileInView={{ scaleX: 1, opacity: 1 }}
           viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1], delay: 0.05 }}
         />
       </div>
     </div>
@@ -63,11 +63,11 @@ function FilaVital(props: Omit<VitalStatProps, 'range'> & { range: Rango | null 
   if (!props.range) {
     return (
       <div className="flex items-baseline justify-between gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-slate-300 uppercase">
+        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-zinc-400 uppercase">
           {props.icon}
           {props.label}
         </span>
-        <span className="text-sm font-medium text-slate-400">Variable</span>
+        <span className="text-sm font-medium text-zinc-400">Variable</span>
       </div>
     )
   }
@@ -85,7 +85,7 @@ export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales
         range={estadisticas.ibu}
         max={100}
         icon={<Flame className="h-3.5 w-3.5" />}
-        segmentClass="bg-linear-to-r from-amber-700 via-amber-500 to-amber-400"
+        segmentClass="bg-amber-500"
       />
       <FilaVital
         label="Color"
@@ -102,7 +102,7 @@ export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales
         range={estadisticas.abv}
         max={12}
         icon={<Percent className="h-3.5 w-3.5" />}
-        segmentClass="bg-linear-to-r from-slate-400 via-amber-500 to-amber-300"
+        segmentClass="bg-amber-500"
       />
     </div>
   )

@@ -40,15 +40,15 @@ export function RadarPerfil({ perfil, height = 300 }: RadarPerfilProps) {
       initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
       className="w-full"
     >
       <ResponsiveContainer width="100%" height={height}>
         <RadarChart data={data} outerRadius="72%" margin={{ top: 8, right: 24, bottom: 8, left: 24 }}>
-          <PolarGrid stroke="#334155" strokeDasharray="3 4" />
+          <PolarGrid stroke="#27272a" strokeDasharray="3 4" />
           <PolarAngleAxis
             dataKey="eje"
-            tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 500 }}
+            tick={{ fill: '#a1a1aa', fontSize: 11, fontWeight: 500 }}
           />
           <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} />
           <Radar
@@ -56,9 +56,9 @@ export function RadarPerfil({ perfil, height = 300 }: RadarPerfilProps) {
             stroke="#fbbf24"
             strokeWidth={2}
             fill="#fbbf24"
-            fillOpacity={0.32}
+            fillOpacity={0.2}
             isAnimationActive={!reduceMotion}
-            animationDuration={900}
+            animationDuration={800}
           />
         </RadarChart>
       </ResponsiveContainer>
