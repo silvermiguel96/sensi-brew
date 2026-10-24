@@ -31,6 +31,7 @@ export function searchBeers(query: string, categoria?: string | null): Beer[] {
       ...beer.perfil_sensorial.burbujas_descriptores,
       ...beer.maridaje_gastronomico.map((m) => m.plato),
       ...beer.platos_sugeridos.map((p) => p.nombre),
+      beer.tipo_vaso.tipo,
     ]
       .join(' ')
       .toLowerCase()

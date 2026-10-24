@@ -3,7 +3,8 @@ import type { Beer } from '../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import { BeerGlass } from './BeerGlass'
-import { srmRangeToColor } from '../lib/srm'
+import { textoRango } from '../lib/rango'
+import { srmRangeToColor, srmToColor } from '../lib/srm'
 
 interface BeerCardProps {
   beer: Beer
@@ -13,8 +14,9 @@ interface BeerCardProps {
 /** Tarjeta de estilo para el listado del Home. */
 export function BeerCard({ beer, index }: BeerCardProps) {
   const reduceMotion = useReducedMotion()
-  const srmMid = (beer.estadisticas_vitales.srm[0] + beer.estadisticas_vitales.srm[1]) / 2
-  const color = srmRangeToColor(beer.estadisticas_vitales.srm)
+  const { ibu, srm, abv } = beer.estadisticas_vitales
+  const srmMid = srm ? (srm[0] + srm[1]) / 2 : 10
+  const color = srm ? srmRangeToColor(srm) : srmToColor(srmMid)
 
   return (
     <motion.div
@@ -22,7 +24,11 @@ export function BeerCard({ beer, index }: BeerCardProps) {
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: reduceMotion ? 0 : index * 0.06 }}
+      transition={{
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1],
+        delay: reduceMotion ? 0 : Math.min(index, 8) * 0.04,
+      }}
     >
       <Link
         to={`/estilo/${beer.id}`}
@@ -50,11 +56,15 @@ export function BeerCard({ beer, index }: BeerCardProps) {
           </h3>
 
           <p className="mt-1 text-xs tabular-nums text-slate-300">
-            IBU {beer.estadisticas_vitales.ibu[0]}–{beer.estadisticas_vitales.ibu[1]}
+            IBU {textoRango(ibu)}
             <span className="mx-1.5 text-slate-500">·</span>
-            SRM {beer.estadisticas_vitales.srm[0]}–{beer.estadisticas_vitales.srm[1]}
+            SRM {textoRango(srm)}
             <span className="mx-1.5 text-slate-500">·</span>
-            ABV {beer.estadisticas_vitales.abv[0]}–{beer.estadisticas_vitales.abv[1]}%
+            ABV {textoRango(abv)}
+            {abv ? '%' : ''}
+          </p>
+          <p className="mt-1 text-xs text-slate-400">
+            {beer.tipo_vaso.tipo} · {beer.tipo_vaso.capacidad_ml} ml
           </p>
 
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -69,7 +79,11 @@ export function BeerCard({ beer, index }: BeerCardProps) {
           </div>
         </div>
 
-        <BeerGlass srm={srmMid} className="relative h-32 w-20 shrink-0" />
+        <BeerGlass
+          srm={srmMid}
+          tipo={beer.tipo_vaso.tipo}
+          className="relative h-32 w-20 shrink-0"
+        />
 
         <ChevronRight className="relative h-5 w-5 shrink-0 text-slate-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-amber-400" />
       </Link>

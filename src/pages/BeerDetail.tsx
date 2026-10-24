@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Gauge } from 'lucide-react'
 import { beers, getBeerById } from '../data/beers'
-import { srmRangeToColor } from '../lib/srm'
+import { srmRangeToColor, srmToColor } from '../lib/srm'
 import { BeerGlass } from '../components/BeerGlass'
 import { MaridajeCard } from '../components/MaridajeCard'
 import { RadarPerfil } from '../components/RadarPerfil'
@@ -35,7 +35,8 @@ export function BeerDetail() {
     )
   }
 
-  const color = srmRangeToColor(beer.estadisticas_vitales.srm)
+  const srm = beer.estadisticas_vitales.srm
+  const color = srm ? srmRangeToColor(srm) : srmToColor(10)
   const idx = beers.findIndex((b) => b.id === beer.id)
   const prev = beers[(idx - 1 + beers.length) % beers.length]
   const next = beers[(idx + 1) % beers.length]
@@ -58,29 +59,23 @@ export function BeerDetail() {
           <ArrowLeft className="h-4 w-4" /> Catálogo
         </Link>
 
-        {/* ── Hero compacto ─────────────────────────────────────── */}
-        <header className="relative mt-4 overflow-hidden rounded-3xl border border-slate-800 p-5 sm:p-6">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: `radial-gradient(100% 120% at 85% 0%, ${color}2e, transparent 60%)`,
-            }}
-          />
-
-          <div className="relative flex flex-col items-center gap-5 text-center sm:flex-row sm:text-left">
+        {/* ── Hero ─────────────────────────────────────────────── */}
+        <header className="relative mt-4 overflow-hidden rounded-3xl border border-slate-800 p-5 sm:p-8">
+          <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row-reverse sm:items-center sm:justify-between sm:gap-12 sm:text-left">
             <motion.div
+              className="shrink-0"
               initial={reduceMotion ? false : { opacity: 0, scale: 0.8, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               <BeerGlass
-                srm={(beer.estadisticas_vitales.srm[0] + beer.estadisticas_vitales.srm[1]) / 2}
-                className="h-40 w-26"
+                srm={srm ? (srm[0] + srm[1]) / 2 : 10}
+                tipo={beer.tipo_vaso.tipo}
+                className="h-44 w-28 sm:h-72 sm:w-44 lg:h-80 lg:w-52"
               />
             </motion.div>
 
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <span className="rounded-md bg-amber-400/15 px-2 py-1 text-xs font-bold text-amber-400 ring-1 ring-amber-400/30">
                 Estilo {beer.id} · BJCP {beer.guia_bjcp}
               </span>
@@ -90,11 +85,27 @@ export function BeerDetail() {
               <p className="mt-1 text-sm font-medium text-slate-400">{beer.categoria}</p>
 
               <div className="mt-4 flex justify-center sm:justify-start">
-                <SrmColorPill
-                  hex={color}
-                  min={beer.estadisticas_vitales.srm[0]}
-                  max={beer.estadisticas_vitales.srm[1]}
-                />
+                {srm ? (
+                  <SrmColorPill hex={color} min={srm[0]} max={srm[1]} />
+                ) : (
+                  <p className="text-sm font-medium text-slate-400">Color variable</p>
+                )}
+              </div>
+
+              <div className="mt-4 max-w-md">
+                <p className="text-[11px] font-bold tracking-widest text-amber-400 uppercase">
+                  Vaso
+                </p>
+                <p className="mt-1 text-sm font-semibold text-slate-100">
+                  {beer.tipo_vaso.tipo}
+                  <span className="font-medium text-slate-400">
+                    {' '}
+                    · {beer.tipo_vaso.capacidad_ml} ml
+                  </span>
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">
+                  {beer.tipo_vaso.justificacion}
+                </p>
               </div>
             </div>
           </div>

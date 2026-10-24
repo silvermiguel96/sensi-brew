@@ -12,9 +12,9 @@ export interface RadarIntensidad {
 export type Rango = [number, number]
 
 export interface EstadisticasVitales {
-  ibu: Rango
-  srm: Rango
-  abv: Rango
+  ibu: Rango | null
+  srm: Rango | null
+  abv: Rango | null
 }
 
 export interface PerfilSensorial {
@@ -46,6 +46,13 @@ export interface PlatoSugerido {
   principio: string
 }
 
+/** Vaso de servicio recomendado para el estilo. */
+export interface TipoVaso {
+  tipo: string
+  capacidad_ml: number
+  justificacion: string
+}
+
 export interface Beer {
   id: string
   nombre_estilo: string
@@ -55,4 +62,5 @@ export interface Beer {
   perfil_sensorial: PerfilSensorial
   maridaje_gastronomico: Maridaje[]
   platos_sugeridos: PlatoSugerido[]
+  tipo_vaso: TipoVaso
 }

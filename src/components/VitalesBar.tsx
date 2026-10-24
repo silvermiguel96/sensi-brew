@@ -1,4 +1,4 @@
-import type { EstadisticasVitales } from '../types/beer'
+import type { EstadisticasVitales, Rango } from '../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Droplet, Flame, Percent } from 'lucide-react'
 import { SRM_GRADIENT } from '../lib/srm'
@@ -59,11 +59,27 @@ function VitalStat({
   )
 }
 
+function FilaVital(props: Omit<VitalStatProps, 'range'> & { range: Rango | null }) {
+  if (!props.range) {
+    return (
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-slate-300 uppercase">
+          {props.icon}
+          {props.label}
+        </span>
+        <span className="text-sm font-medium text-slate-400">Variable</span>
+      </div>
+    )
+  }
+
+  return <VitalStat {...props} range={props.range} />
+}
+
 /** Muestra las tres estadísticas vitales (IBU / SRM / ABV) con su rango. */
 export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales }) {
   return (
     <div className="space-y-5">
-      <VitalStat
+      <FilaVital
         label="Amargor"
         unit="IBU"
         range={estadisticas.ibu}
@@ -71,7 +87,7 @@ export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales
         icon={<Flame className="h-3.5 w-3.5" />}
         segmentClass="bg-linear-to-r from-amber-700 via-amber-500 to-amber-400"
       />
-      <VitalStat
+      <FilaVital
         label="Color"
         unit="SRM"
         range={estadisticas.srm}
@@ -80,7 +96,7 @@ export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales
         segmentClass="bg-amber-400"
         trackStyle={{ background: SRM_GRADIENT }}
       />
-      <VitalStat
+      <FilaVital
         label="Alcohol"
         unit="% vol"
         range={estadisticas.abv}
