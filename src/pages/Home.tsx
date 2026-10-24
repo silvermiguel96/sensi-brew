@@ -85,12 +85,16 @@ export function Home() {
       </motion.div>
 
       {/* Resultados */}
-      <p className="mt-10 mb-4 text-xs font-medium tracking-widest text-zinc-400 uppercase">
+      <p
+        role="status"
+        aria-live="polite"
+        className="mt-10 mb-4 text-xs font-medium tracking-widest text-zinc-400 uppercase"
+      >
         {results.length} {results.length === 1 ? 'estilo' : 'estilos'}
       </p>
 
       {results.length > 0 ? (
-        <motion.div layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {results.map((beer, i) => (
               <BeerCard key={beer.id} beer={beer} index={i} />

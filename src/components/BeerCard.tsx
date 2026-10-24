@@ -20,7 +20,6 @@ export function BeerCard({ beer, index }: BeerCardProps) {
 
   return (
     <motion.div
-      layout
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
@@ -51,9 +50,9 @@ export function BeerCard({ beer, index }: BeerCardProps) {
             <span className="truncate text-xs text-zinc-400">{beer.categoria}</span>
           </div>
 
-          <h3 className="mt-2 line-clamp-2 font-serif text-xl font-normal tracking-normal text-zinc-50 group-hover:text-amber-300">
+          <h2 className="mt-2 line-clamp-2 font-serif text-xl font-normal tracking-normal text-zinc-50 group-hover:text-amber-300">
             {beer.nombre_estilo}
-          </h3>
+          </h2>
 
           <p className="mt-1 text-xs tabular-nums text-zinc-400">
             IBU {textoRango(ibu)}

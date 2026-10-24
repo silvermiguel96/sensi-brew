@@ -85,6 +85,14 @@ export default defineConfig({
     }),
   ],
   build: {
+    modulePreload: {
+      resolveDependencies(_filename, deps, { hostType }) {
+        if (hostType === 'html') {
+          return deps.filter((dep) => !dep.includes('vendor-charts'))
+        }
+        return deps
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {

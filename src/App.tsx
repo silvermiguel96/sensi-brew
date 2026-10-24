@@ -114,7 +114,7 @@ export default function App() {
           <main>
             <AnimatedRoutes />
           </main>
-          <footer className="border-t border-white/5 py-8 text-center text-xs text-zinc-600">
+          <footer className="border-t border-white/5 py-8 text-center text-xs text-zinc-400">
             SensiBrew · Datos sensoriales basados en la guía BJCP 2021 · Hecho para
             catadores
           </footer>
