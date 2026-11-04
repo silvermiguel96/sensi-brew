@@ -26,7 +26,7 @@ export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: Marid
         title={title}
       />
 
-      <p className="text-balance-es text-xl font-semibold text-amber-300">
+      <p className="text-balance-es text-xl font-semibold text-sb-accent">
         {maridaje.plato}
       </p>
 
@@ -34,7 +34,7 @@ export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: Marid
         {maridaje.ingredientes_clave.map((ing) => (
           <span
             key={ing}
-            className="rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-zinc-300"
+            className="rounded-full bg-sb-fill px-2.5 py-1 text-xs font-medium text-sb-body"
           >
             {ing}
           </span>
@@ -42,11 +42,11 @@ export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: Marid
       </div>
 
       <div className="mt-4 border-l-2 border-amber-500/30 pl-4">
-        <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold tracking-widest text-amber-400 uppercase">
+        <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold tracking-widest text-sb-accent uppercase">
           <FlaskConical className="h-3.5 w-3.5" />
           Justificación química
         </p>
-        <p className="text-pretty text-sm leading-relaxed text-zinc-300">
+        <p className="text-pretty text-sm leading-relaxed text-sb-body">
           {maridaje.justificacion_quimica}
         </p>
       </div>

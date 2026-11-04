@@ -44,7 +44,7 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
               initial={reduceMotion ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-block rounded-md bg-amber-500/10 px-2.5 py-1 text-xs font-bold tracking-widest text-amber-400 uppercase"
+              className="inline-block rounded-md bg-amber-500/10 px-2.5 py-1 text-xs font-bold tracking-widest text-sb-accent uppercase"
             >
               Estilo {style.id} · BJCP {style.guiaBjcp}
             </motion.span>
@@ -53,12 +53,12 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 1, 0.5, 1] }}
-              className="mt-3 font-serif text-4xl font-normal tracking-normal text-zinc-50 sm:text-5xl"
+              className="mt-3 font-serif text-4xl font-medium tracking-normal text-sb-title sm:text-5xl"
             >
               {style.nombre}
             </motion.h1>
 
-            <p className="mt-1.5 text-sm font-medium text-zinc-400">{style.categoria}</p>
+            <p className="mt-1.5 text-sm font-medium text-sb-muted">{style.categoria}</p>
 
             <div className="mt-5 flex justify-center sm:justify-start">
               <SrmColorPill
@@ -74,7 +74,7 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
       {/* ── Métrica técnica ───────────────────────────────────── */}
       <section className="mt-10">
         <SectionTitle title="Métrica técnica" hint="rango BJCP vs. escala estándar" />
-        <div className="glass-panel grid divide-y divide-white/5 rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <div className="glass-panel grid divide-y divide-sb-border rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           <TechnicalStatCard icon={<Wine className="h-4.5 w-4.5" />} spec={abv} delay={0} />
           <TechnicalStatCard icon={<Flame className="h-4.5 w-4.5" />} spec={ibu} delay={0.05} />
           <TechnicalStatCard
@@ -86,11 +86,11 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
       </section>
 
       {/* ── Perfil sensorial ──────────────────────────────────── */}
-      <section className="glass-panel mt-10 grid divide-y divide-white/5 rounded-2xl lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+      <section className="glass-panel mt-10 grid divide-y divide-sb-border rounded-2xl lg:grid-cols-2 lg:divide-x lg:divide-y-0">
         <div className="p-5 sm:p-6">
           <SectionTitle title="Perfil sensorial" hint="intensidad 1–5" />
           <SensoryRadar perfil={style.perfilSensorial} hex={style.colorSrm.hex} />
-          <p className="mt-2 text-center text-[11px] font-medium text-zinc-400">
+          <p className="mt-2 text-center text-[11px] font-medium text-sb-muted">
             1 = muy suave · 5 = muy intenso
           </p>
         </div>
@@ -98,7 +98,7 @@ export function BeerStyleDetail({ style }: BeerStyleDetailProps) {
         <div className="p-5 sm:p-6">
           <SectionTitle title="Notas de sabor" />
           <FlavorNotes notas={style.notasSabor} />
-          <p className="mt-6 border-t border-white/5 pt-4 text-xs leading-relaxed text-zinc-400">
+          <p className="mt-6 border-t border-sb-border pt-4 text-xs leading-relaxed text-sb-muted">
             {style.resumenNotas}
           </p>
         </div>

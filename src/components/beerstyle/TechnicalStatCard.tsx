@@ -25,23 +25,23 @@ export function TechnicalStatCard({ icon, spec, delay = 0 }: TechnicalStatCardPr
       className="p-5 sm:p-6"
     >
       <div className="flex items-center gap-2">
-        <span className="text-amber-400" aria-hidden>
+        <span className="text-sb-accent" aria-hidden>
           {icon}
         </span>
-        <h3 className="text-xs font-medium tracking-widest text-zinc-400 uppercase">
+        <h3 className="text-xs font-medium tracking-widest text-sb-muted uppercase">
           {spec.label}
         </h3>
       </div>
 
-      <p className="mt-4 text-2xl font-medium tracking-tight text-zinc-100 tabular-nums">
+      <p className="mt-4 text-2xl font-medium tracking-tight text-sb-text tabular-nums">
         {format(spec.min)} – {format(spec.max)}{' '}
-        <span className="text-sm font-semibold text-zinc-400">{spec.unit}</span>
+        <span className="text-sm font-semibold text-sb-muted">{spec.unit}</span>
       </p>
 
       {/* Barra de rango dentro de la escala estándar */}
       <div className="mt-4">
         <div
-          className="relative h-2 overflow-hidden rounded-full bg-zinc-950 ring-1 ring-white/10"
+          className="relative h-2 overflow-hidden rounded-full bg-sb-bg ring-1 ring-sb-border"
           role="img"
           aria-label={`Rango ${format(spec.min)} a ${format(spec.max)} ${spec.unit} dentro de una escala de ${format(spec.scaleMin)} a ${format(spec.scaleMax)}`}
         >
@@ -53,7 +53,7 @@ export function TechnicalStatCard({ icon, spec, delay = 0 }: TechnicalStatCardPr
             transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1], delay: delay + 0.2 }}
           />
         </div>
-        <div className="mt-1.5 flex justify-between text-[10px] font-medium text-zinc-400 tabular-nums">
+        <div className="mt-1.5 flex justify-between text-[10px] font-medium text-sb-muted tabular-nums">
           <span>
             {format(spec.scaleMin)} {spec.unit}
           </span>

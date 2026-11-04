@@ -287,7 +287,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
     return (
       <div
         ref={contenedorRef}
-        className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-white/10 bg-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
+        className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-sb-border bg-sb-fill shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
         role="img"
         aria-label={etiqueta}
       >
@@ -334,7 +334,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
         </defs>
       </svg>
       <div
-        className="absolute overflow-hidden bg-white/5"
+        className="absolute overflow-hidden bg-sb-fill"
         style={{
           top: `${silueta.top}%`,
           height: `${silueta.height}%`,
@@ -363,7 +363,7 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
         <path
           d={silueta.d}
           fill="none"
-          stroke="rgba(250,250,250,0.7)"
+          className="vaso-contorno"
           strokeWidth="1.4"
           vectorEffect="non-scaling-stroke"
           strokeLinejoin="round"

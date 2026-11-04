@@ -18,9 +18,9 @@ export function FlavorNotes({ notas }: FlavorNotesProps) {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1], delay: i * 0.05 }}
-          className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm font-semibold text-amber-200"
+          className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1.5 text-sm font-semibold text-sb-accent"
         >
-          <Sparkles className="h-3.5 w-3.5 text-amber-400" aria-hidden />
+          <Sparkles className="h-3.5 w-3.5 text-sb-accent" aria-hidden />
           {nota}
         </motion.span>
       ))}

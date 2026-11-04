@@ -39,7 +39,7 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
         role="tablist"
         aria-label="Descripción sensorial"
         onKeyDown={handleKeyDown}
-        className="flex flex-wrap gap-1 rounded-full border border-white/10 bg-zinc-950/60 p-1.5"
+        className="flex flex-wrap gap-1 rounded-full border border-sb-border bg-sb-fill-strong p-1.5"
       >
         {TABS.map((tab, i) => {
           const isActive = tab.key === active
@@ -56,8 +56,8 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
               aria-controls={`sensory-panel-${tab.key}`}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(tab.key)}
-              className={`relative flex flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-2.5 text-xs font-bold whitespace-nowrap transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none sm:text-sm ${
-                isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
+              className={`relative flex flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-2.5 text-xs font-bold whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none sm:text-sm ${
+                isActive ? 'text-zinc-950' : 'text-sb-muted hover:text-sb-text'
               }`}
             >
               {isActive && (
@@ -92,7 +92,7 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
             exit={reduceMotion ? undefined : { opacity: 0, x: -14 }}
             transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
           >
-            <p className="text-pretty text-sm leading-relaxed text-zinc-300">
+            <p className="text-pretty text-sm leading-relaxed text-sb-body">
               {perfil[active]}
             </p>
           </motion.div>

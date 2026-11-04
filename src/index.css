@@ -4,9 +4,62 @@
 @theme {
   --color-amber-glow: #fbbf24;
   --color-foam: #f5efe3;
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --color-sb-bg: #09090b;
+  --color-sb-title: #fafafa;
+  --color-sb-text: #f4f4f5;
+  --color-sb-body: #d4d4d8;
+  --color-sb-muted: #a1a1aa;
+  --color-sb-border: rgb(255 255 255 / 0.1);
+  --color-sb-border-strong: rgb(255 255 255 / 0.2);
+  --color-sb-fill: rgb(255 255 255 / 0.05);
+  --color-sb-fill-strong: rgb(255 255 255 / 0.1);
+  --color-sb-focus: #f59e0b;
+  --color-sb-accent: #fbbf24;
+}
+
+html[data-tema='claro'] {
+  /* Controles nativos (input, select, scrollbar) siguen el tema, no el SO */
+  color-scheme: light;
+  --color-sb-bg: #fafafa;
+  --color-sb-title: #0c0a09;
+  --color-sb-text: #1c1917;
+  --color-sb-body: #3f3f46;
+  --color-sb-muted: #52525b;
+  --color-sb-border: rgb(24 24 27 / 0.14);
+  --color-sb-border-strong: rgb(24 24 27 / 0.28);
+  --color-sb-fill: rgb(24 24 27 / 0.045);
+  --color-sb-fill-strong: rgb(24 24 27 / 0.08);
+  --color-sb-focus: #b45309;
+  --color-sb-accent: #b45309;
+
+  --sb-glass-1: rgb(255 255 255 / 0.78);
+  --sb-glass-2: rgb(250 250 250 / 0.92);
+  --sb-glass-highlight: rgb(24 24 27 / 0.06);
+  --sb-glass-outline: rgb(24 24 27 / 0.45);
+  --sb-radar-grid: #d4d4d8;
+  --sb-radar-tick: #52525b;
+  --sb-radar-line: #d97706;
+  --sb-scrollbar-thumb: #a1a1aa;
+  --sb-scrollbar-thumb-hover: #71717a;
+  --sb-scrollbar-edge: rgb(24 24 27 / 0.35);
+}
+
+:root {
+  color-scheme: dark;
+  --sb-glass-1: rgb(39 39 42 / 0.45);
+  --sb-glass-2: rgb(9 9 11 / 0.85);
+  --sb-glass-highlight: rgb(255 255 255 / 0.05);
+  --sb-glass-outline: rgba(250, 250, 250, 0.7);
+  --sb-radar-grid: #27272a;
+  --sb-radar-tick: #a1a1aa;
+  --sb-radar-line: #fbbf24;
+  --sb-scrollbar-thumb: #3f3f46;
+  --sb-scrollbar-thumb-hover: #52525b;
+  --sb-scrollbar-edge: #09090b;
 }
 
 /* ── Base ───────────────────────────────────────────────────── */
@@ -16,8 +69,18 @@ html {
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  background: var(--color-sb-bg);
+  color: var(--color-sb-text);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cursor de mano en todos los interactivos (checklist UX) */
+a[href],
+button,
+[role='tab'],
+[role='button'] {
+  cursor: pointer;
 }
 
 ::selection {
@@ -28,31 +91,91 @@ body {
   width: 10px;
   height: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: var(--sb-scrollbar-thumb);
   border-radius: 9999px;
-  border: 2px solid #09090b;
+  border: 2px solid var(--sb-scrollbar-edge);
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: var(--sb-scrollbar-thumb-hover);
 }
 
 /* ── Utilidades ─────────────────────────────────────────────── */
+/* Panel de vidrio con borde luminoso y profundidad sutil (temable) */
 @utility glass-panel {
-  background: linear-gradient(
-    160deg,
-    rgb(24 24 27 / 0.4),
-    rgb(9 9 11 / 0.8)
-  );
-  border: 1px solid rgb(255 255 255 / 0.05);
+  background: linear-gradient(160deg, var(--sb-glass-1), var(--sb-glass-2));
+  border: 1px solid var(--color-sb-border);
+  box-shadow:
+    inset 0 1px 0 0 var(--sb-glass-highlight),
+    0 8px 32px -12px rgb(0 0 0 / 0.5);
   backdrop-filter: blur(24px);
+}
+
+/* Píldora ámbar de acción principal. El padding y el tamaño van en el uso. */
+@utility btn-accent {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-amber-500 font-bold text-zinc-950 transition-colors hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none;
 }
 
 @utility text-balance-es {
   text-wrap: balance;
+}
+
+/* Título con gradiente ámbar → crema */
+@utility text-gradient-gold {
+  background: linear-gradient(115deg,
+      #fde68a 0%,
+      #fbbf24 45%,
+      #f5efe3 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* En tema claro el gradiente claro perdería contraste: versión oscura */
+html[data-tema='claro'] .text-gradient-gold {
+  background-image: linear-gradient(115deg, #92400e 0%, #b45309 45%, #292524 100%);
+}
+
+/* ── Recharts temable (radares) ─────────────────────────────── */
+/* Las propiedades CSS ganan a los atributos de presentación inlineados */
+.recharts-polar-grid line,
+.recharts-polar-grid circle,
+.recharts-polar-grid path {
+  stroke: var(--sb-radar-grid);
+}
+
+.recharts-polar-angle-axis text {
+  fill: var(--sb-radar-tick);
+}
+
+/* Solo el radar de perfil (ámbar); el de la ficha conserva su color SRM */
+.radar-amber .recharts-radar-polygon {
+  stroke: var(--sb-radar-line);
+  fill: var(--sb-radar-line);
+}
+
+/* Contorno del vaso: visible en ambos temas */
+.vaso-contorno {
+  stroke: var(--sb-glass-outline);
+}
+
+/* Brillo ámbar sutil al pasar el cursor */
+@utility glow-hover {
+  transition:
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 0 1px rgb(251 191 36 / 0.18),
+    0 12px 32px -16px rgb(251 191 36 / 0.35);
 }
 
 /* ── Animaciones ────────────────────────────────────────────── */
@@ -61,9 +184,11 @@ body {
     transform: translateY(0) scale(0.8);
     opacity: 0;
   }
+
   12% {
     opacity: 0.85;
   }
+
   100% {
     transform: translateY(var(--rise, -110px)) scale(1.15);
     opacity: 0;
@@ -71,10 +196,12 @@ body {
 }
 
 @keyframes foam-shimmer {
+
   0%,
   100% {
     opacity: 0.75;
   }
+
   50% {
     opacity: 1;
   }
@@ -93,6 +220,7 @@ body {
   html {
     scroll-behavior: auto;
   }
+
   .animate-bubble,
   .animate-foam {
     animation: none;

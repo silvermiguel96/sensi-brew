@@ -59,6 +59,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="SensiBrew" />
     <title>SensiBrew — Guía sensorial BJCP 2021</title>
+    <script>
+      try {
+        var t = localStorage.getItem('sensibrew-tema')
+        if (t !== 'claro' && t !== 'oscuro') {
+          t = matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro'
+        }
+        document.documentElement.setAttribute('data-tema', t)
+      } catch (e) { }
+    </script>
   </head>
   <body>
     <div id="root"></div>

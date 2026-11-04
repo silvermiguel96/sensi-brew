@@ -19,9 +19,11 @@ export function SectionTitle({ icon, title, hint }: SectionTitleProps) {
       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       className="mb-4 flex items-center gap-2.5"
     >
-      {icon && <span className="text-amber-400">{icon}</span>}
-      <h2 className="text-lg font-semibold tracking-wide text-zinc-100">{title}</h2>
-      {hint && <span className="text-xs font-medium text-zinc-400">{hint}</span>}
+      {icon && <span className="text-sb-accent">{icon}</span>}
+      <h2 className="font-serif text-lg font-medium tracking-wide text-sb-text">
+        {title}
+      </h2>
+      {hint && <span className="text-xs font-medium text-sb-muted">{hint}</span>}
     </motion.div>
   )
 }

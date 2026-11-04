@@ -24,7 +24,7 @@ function DishCard({ plato, index }: DishCardProps) {
       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1], delay: index * 0.05 }}
       whileHover={reduceMotion ? undefined : { scale: 1.02, y: -4 }}
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-      className="glass-panel group w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl transition-colors hover:border-white/10 sm:w-[270px]"
+      className="glass-panel group w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl transition-colors hover:border-sb-border sm:w-[270px]"
     >
       {/* "Imagen" del plato */}
       <div
@@ -41,7 +41,7 @@ function DishCard({ plato, index }: DishCardProps) {
 
         {/* Categoría */}
         <span
-          className={`absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase backdrop-blur-sm ${categoria.chipClass}`}
+          className={`absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase ${categoria.chipClass}`}
         >
           <Icono className="h-3 w-3" />
           {categoria.label}
@@ -49,14 +49,14 @@ function DishCard({ plato, index }: DishCardProps) {
 
         {/* Afinidad */}
         <div
-          className="absolute right-2.5 bottom-2.5 flex items-end gap-1 rounded-full bg-zinc-950/60 px-2 py-1 backdrop-blur-sm"
+          className="absolute right-2.5 bottom-2.5 flex items-end gap-1 rounded-full bg-zinc-950/80 px-2 py-1"
           role="img"
           aria-label={`Afinidad ${plato.afinidad} de 5`}
         >
           {Array.from({ length: 5 }).map((_, i) => (
             <span
               key={i}
-              className={`w-1 rounded-full ${
+              className={`w-1 shrink-0 rounded-full ${
                 i < plato.afinidad ? 'bg-amber-400' : 'bg-white/25'
               }`}
               style={{ height: 6 + i * 2 }}
@@ -67,15 +67,15 @@ function DishCard({ plato, index }: DishCardProps) {
 
       {/* Contenido */}
       <div className="p-4">
-        <h3 className="text-sm leading-snug font-bold text-zinc-50">{plato.nombre}</h3>
+        <h3 className="text-sm leading-snug font-bold text-sb-title">{plato.nombre}</h3>
 
         <motion.span
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 + index * 0.05 }}
-          className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200 transition-colors group-hover:bg-amber-500/15"
+          className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-sb-accent transition-colors group-hover:bg-amber-500/15"
         >
-          <Sparkles className="h-3 w-3 text-amber-400" />
+          <Sparkles className="h-3 w-3 text-sb-accent" />
           {plato.principio}
         </motion.span>
       </div>
@@ -130,16 +130,18 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
           <button
             onClick={() => move(-1)}
             aria-label="Platos anteriores"
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:text-amber-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
+            disabled={active === 0}
+            className="grid h-11 w-11 place-items-center rounded-full border border-sb-border bg-sb-fill text-sb-body transition-colors hover:text-sb-accent focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-sb-body"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
           <button
             onClick={() => move(1)}
             aria-label="Más platos"
-            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 text-zinc-300 transition-colors hover:text-amber-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
+            disabled={active >= platos.length - 1}
+            className="grid h-11 w-11 place-items-center rounded-full border border-sb-border bg-sb-fill text-sb-body transition-colors hover:text-sb-accent focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-sb-body"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4" aria-hidden />
           </button>
         </div>
       </div>
@@ -154,18 +156,23 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
         ))}
       </div>
 
-      {/* Indicadores */}
-      <div className="mt-3 flex justify-center gap-1.5">
+      {/* Un punto por plato: pastilla de 6px, área de toque de 44px */}
+      <div className="mt-1 flex items-center justify-center">
         {platos.map((plato, i) => (
           <button
-            key={plato.nombre}
+            key={`${plato.nombre}-${i}`}
+            type="button"
             onClick={() => goTo(i)}
             aria-label={`Ir al plato ${i + 1}: ${plato.nombre}`}
-            aria-current={i === active}
-            className={`h-1.5 rounded-full transition-all duration-300 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none ${
-              i === active ? 'w-6 bg-amber-500' : 'w-1.5 bg-zinc-700 hover:bg-zinc-600'
-            }`}
-          />
+            aria-current={i === active ? 'true' : undefined}
+            className="grid h-11 place-items-center px-1.5 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
+          >
+            <span
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === active ? 'w-6 bg-amber-500' : 'w-1.5 bg-sb-muted/50'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

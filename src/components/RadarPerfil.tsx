@@ -41,7 +41,7 @@ export function RadarPerfil({ perfil, height = 300 }: RadarPerfilProps) {
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-      className="w-full"
+      className="radar-amber w-full"
     >
       <ResponsiveContainer width="100%" height={height}>
         <RadarChart data={data} outerRadius="72%" margin={{ top: 8, right: 24, bottom: 8, left: 24 }}>

@@ -44,7 +44,7 @@ export function PairingTabs({ maridajes }: PairingTabsProps) {
         role="tablist"
         aria-label="Categorías de maridaje"
         onKeyDown={handleKeyDown}
-        className="inline-flex flex-wrap gap-1 rounded-full border border-white/10 bg-zinc-950/60 p-1.5"
+        className="inline-flex flex-wrap gap-1 rounded-full border border-sb-border bg-sb-fill-strong p-1.5"
       >
         {maridajes.map((m, i) => {
           const isActive = i === active
@@ -60,8 +60,8 @@ export function PairingTabs({ maridajes }: PairingTabsProps) {
               aria-controls={`panel-${m.categoria}`}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(i)}
-              className={`relative flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none ${
-                isActive ? 'text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
+              className={`relative flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none ${
+                isActive ? 'text-zinc-950' : 'text-sb-muted hover:text-sb-text'
               }`}
             >
               {isActive && (

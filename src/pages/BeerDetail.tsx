@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Check, Gauge, Share2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Beer, Gauge } from 'lucide-react'
 import { beers, getBeerById } from '../data/beers'
 import { srmRangeToColor, srmToColor } from '../lib/srm'
+import { BarraDetalle } from '../components/BarraDetalle'
 import { BeerGlass } from '../components/BeerGlass'
 import { MaridajeCard } from '../components/MaridajeCard'
 import { RadarPerfil } from '../components/RadarPerfil'
@@ -12,72 +12,33 @@ import { VitalesBar } from '../components/VitalesBar'
 import { SrmColorPill } from '../components/beerstyle/SrmColorPill'
 import { SensoryTabs } from '../components/food/SensoryTabs'
 import { SuggestedDishes } from '../components/food/SuggestedDishes'
+import { useMetaPagina } from '../hooks/useMetaPagina'
 
 export function BeerDetail() {
   const { id } = useParams<{ id: string }>()
   const reduceMotion = useReducedMotion()
   const beer = id ? getBeerById(id) : undefined
-  const [copiado, setCopiado] = useState(false)
 
-  // SEO dinámico por estilo
-  useEffect(() => {
-    if (!beer) return
-    const prevTitle = document.title
-    document.title = `${beer.nombre_estilo} (${beer.id}) — SensiBrew BJCP 2021`
-
-    const metaDesc = document.querySelector('meta[name="description"]')
-    const prevDesc = metaDesc?.getAttribute('content')
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        `Perfil sensorial, IBU, SRM, ABV y maridajes para el estilo ${beer.nombre_estilo} (${beer.id}) según la guía oficial BJCP 2021.`
-      )
-    }
-
-    return () => {
-      document.title = prevTitle
-      if (metaDesc && prevDesc) metaDesc.setAttribute('content', prevDesc)
-    }
-  }, [beer])
-
-  const handleCompartir = async () => {
-    if (!beer) return
-    const url = window.location.href
-    const datos = {
-      title: `${beer.nombre_estilo} (${beer.id}) — SensiBrew`,
-      text: `Perfil sensorial y maridajes de ${beer.nombre_estilo} (BJCP ${beer.id})`,
-      url,
-    }
-
-    if (navigator.share) {
-      try {
-        await navigator.share(datos)
-        return
-      } catch {
-        // Fallback a copiar si el usuario cancela o el navegador falla
-      }
-    }
-
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(url)
-      setCopiado(true)
-      setTimeout(() => setCopiado(false), 2000)
-    }
-  }
+  useMetaPagina(
+    beer ? `${beer.nombre_estilo} (${beer.id}) — SensiBrew BJCP 2021` : null,
+    beer
+      ? `Perfil sensorial, IBU, SRM, ABV y maridajes para el estilo ${beer.nombre_estilo} (${beer.id}) según la guía oficial BJCP 2021.`
+      : null,
+  )
 
   if (!beer) {
     return (
       <div className="mx-auto max-w-lg px-4 py-24 text-center">
-        <p className="text-4xl">🍺</p>
-        <h1 className="mt-4 text-xl font-bold text-zinc-100">Estilo no encontrado</h1>
-        <p className="mt-2 text-sm text-zinc-400">
+        <Beer className="mx-auto h-10 w-10 text-sb-accent/70" aria-hidden />
+        <h1 className="mt-4 text-xl font-bold text-sb-text">Estilo no encontrado</h1>
+        <p className="mt-2 text-sm text-sb-muted">
           El estilo “{id}” no existe en el catálogo local.
         </p>
         <Link
           to="/"
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-amber-500 px-4 py-2.5 text-sm font-bold text-zinc-950 transition-colors hover:bg-amber-400"
+          className="btn-accent mt-6 px-4 py-2.5 text-sm"
         >
-          <ArrowLeft className="h-4 w-4" /> Volver al catálogo
+          <ArrowLeft className="h-4 w-4" aria-hidden /> Volver al catálogo
         </Link>
       </div>
     )
@@ -99,34 +60,7 @@ export function BeerDetail() {
         transition={{ duration: 0.3 }}
         className="mx-auto w-full max-w-6xl px-4 pt-6 pb-20 sm:px-6"
       >
-        {/* Navegación y compartir */}
-        <div className="flex items-center justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-amber-400"
-          >
-            <ArrowLeft className="h-4 w-4" /> Catálogo
-          </Link>
-
-          <button
-            type="button"
-            onClick={handleCompartir}
-            aria-label="Compartir estilo"
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-zinc-50 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:outline-none"
-          >
-            {copiado ? (
-              <>
-                <Check className="h-3.5 w-3.5 text-amber-400" />
-                <span className="text-amber-300">¡Enlace copiado!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="h-3.5 w-3.5 text-zinc-400" />
-                <span>Compartir</span>
-              </>
-            )}
-          </button>
-        </div>
+        <BarraDetalle titulo={`${beer.nombre_estilo} (${beer.id}) — SensiBrew`} />
 
         {/* ── Hero ─────────────────────────────────────────────── */}
         <header className="glass-panel relative mt-4 overflow-hidden rounded-2xl p-5 sm:p-8">
@@ -145,34 +79,34 @@ export function BeerDetail() {
             </motion.div>
 
             <div className="min-w-0 flex-1">
-              <span className="rounded-md bg-amber-500/10 px-2 py-1 text-xs font-bold tracking-widest text-amber-400 uppercase">
+              <span className="rounded-md bg-amber-500/10 px-2 py-1 text-xs font-bold tracking-widest text-sb-accent uppercase">
                 Estilo {beer.id} · BJCP {beer.guia_bjcp}
               </span>
-              <h1 className="mt-2.5 font-serif text-3xl font-normal tracking-normal text-zinc-50 sm:text-4xl">
+              <h1 className="mt-2.5 font-serif text-3xl font-medium tracking-normal text-sb-title sm:text-4xl">
                 {beer.nombre_estilo}
               </h1>
-              <p className="mt-1 text-sm font-medium text-zinc-400">{beer.categoria}</p>
+              <p className="mt-1 text-sm font-medium text-sb-muted">{beer.categoria}</p>
 
               <div className="mt-4 flex justify-center sm:justify-start">
                 {srm ? (
                   <SrmColorPill hex={color} min={srm[0]} max={srm[1]} />
                 ) : (
-                  <p className="text-sm font-medium text-zinc-400">Color variable</p>
+                  <p className="text-sm font-medium text-sb-muted">Color variable</p>
                 )}
               </div>
 
               <div className="mt-4 max-w-md">
-                <p className="text-[11px] font-bold tracking-widest text-amber-400 uppercase">
+                <p className="text-[11px] font-bold tracking-widest text-sb-accent uppercase">
                   Vaso
                 </p>
-                <p className="mt-1 text-sm font-semibold text-zinc-100">
+                <p className="mt-1 text-sm font-semibold text-sb-text">
                   {beer.tipo_vaso.tipo}
-                  <span className="font-medium text-zinc-400">
+                  <span className="font-medium text-sb-muted">
                     {' '}
                     · {beer.tipo_vaso.capacidad_ml} ml
                   </span>
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+                <p className="mt-1 text-xs leading-relaxed text-sb-muted">
                   {beer.tipo_vaso.justificacion}
                 </p>
               </div>
@@ -202,11 +136,11 @@ export function BeerDetail() {
             <SectionTitle title="Perfil sensorial" hint="toca para explorar" />
             <SensoryTabs perfil={beer.perfil_sensorial} />
 
-            <div className="mt-5 flex flex-wrap gap-1.5 border-t border-white/5 pt-4">
+            <div className="mt-5 flex flex-wrap gap-1.5 border-t border-sb-border pt-4">
               {beer.perfil_sensorial.burbujas_descriptores.map((d) => (
                 <span
                   key={d}
-                  className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-400"
+                  className="rounded-full bg-sb-fill px-2.5 py-1 text-[11px] font-medium text-sb-muted"
                 >
                   {d}
                 </span>
@@ -214,7 +148,7 @@ export function BeerDetail() {
             </div>
           </section>
 
-          <aside className="glass-panel h-fit divide-y divide-white/5 rounded-2xl">
+          <aside className="glass-panel h-fit divide-y divide-sb-border rounded-2xl">
             <div className="p-5">
               <SectionTitle title="Intensidad" hint="escala 0–5" />
               <RadarPerfil perfil={beer.perfil_sensorial.radar_intensidad} height={210} />
@@ -233,27 +167,27 @@ export function BeerDetail() {
         <nav className="mt-10 flex items-stretch justify-between gap-3">
           <Link
             to={`/estilo/${prev.id}`}
-            className="glass-panel group flex flex-1 items-center gap-3 rounded-2xl p-4 transition-colors hover:border-white/10"
+            className="glass-panel glow-hover group flex flex-1 items-center gap-3 rounded-2xl p-4 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
           >
-            <ArrowLeft className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:-translate-x-0.5" />
+            <ArrowLeft className="h-4 w-4 shrink-0 text-sb-muted transition-transform group-hover:-translate-x-0.5" aria-hidden />
             <span className="min-w-0">
-              <span className="block text-[11px] text-zinc-400">Anterior</span>
-              <span className="block truncate text-sm font-semibold text-zinc-100 group-hover:text-amber-300">
+              <span className="block text-[11px] text-sb-muted">Anterior</span>
+              <span className="block truncate text-sm font-semibold text-sb-text group-hover:text-sb-accent">
                 {prev.id} · {prev.nombre_estilo}
               </span>
             </span>
           </Link>
           <Link
             to={`/estilo/${next.id}`}
-            className="glass-panel group flex flex-1 items-center justify-end gap-3 rounded-2xl p-4 text-right transition-colors hover:border-white/10"
+            className="glass-panel glow-hover group flex flex-1 items-center justify-end gap-3 rounded-2xl p-4 text-right focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
           >
             <span className="min-w-0">
-              <span className="block text-[11px] text-zinc-400">Siguiente</span>
-              <span className="block truncate text-sm font-semibold text-zinc-100 group-hover:text-amber-300">
+              <span className="block text-[11px] text-sb-muted">Siguiente</span>
+              <span className="block truncate text-sm font-semibold text-sb-text group-hover:text-sb-accent">
                 {next.id} · {next.nombre_estilo}
               </span>
             </span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-sb-muted transition-transform group-hover:translate-x-0.5" aria-hidden />
           </Link>
         </nav>
       </motion.article>

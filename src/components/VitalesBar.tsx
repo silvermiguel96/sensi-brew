@@ -32,18 +32,18 @@ function VitalStat({
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-zinc-400 uppercase">
+        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-sb-muted uppercase">
           {icon}
           {label}
         </span>
-        <span className="text-sm font-medium text-zinc-100 tabular-nums">
+        <span className="text-sm font-medium text-sb-text tabular-nums">
           {format(min)}–{format(maxVal)}{' '}
-          <span className="font-medium text-zinc-400">{unit}</span>
+          <span className="font-medium text-sb-muted">{unit}</span>
         </span>
       </div>
 
       <div
-        className="relative h-2.5 overflow-hidden rounded-full bg-zinc-800 ring-1 ring-white/10"
+        className="relative h-2.5 overflow-hidden rounded-full bg-sb-fill-strong ring-1 ring-sb-border"
         style={trackStyle}
       >
         <motion.div
@@ -63,11 +63,11 @@ function FilaVital(props: Omit<VitalStatProps, 'range'> & { range: Rango | null 
   if (!props.range) {
     return (
       <div className="flex items-baseline justify-between gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-zinc-400 uppercase">
+        <span className="flex items-center gap-1.5 text-xs font-medium tracking-widest text-sb-muted uppercase">
           {props.icon}
           {props.label}
         </span>
-        <span className="text-sm font-medium text-zinc-400">Variable</span>
+        <span className="text-sm font-medium text-sb-muted">Variable</span>
       </div>
     )
   }

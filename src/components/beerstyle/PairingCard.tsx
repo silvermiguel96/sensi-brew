@@ -19,17 +19,17 @@ export function PairingCard({ pairing, icon }: PairingCardProps) {
       className="rounded-2xl p-6"
     >
       <div className="flex items-center gap-3">
-        <span className="text-amber-400" aria-hidden>
+        <span className="text-sb-accent" aria-hidden>
           {icon}
         </span>
-        <h3 className="text-lg font-semibold text-zinc-50 capitalize">{pairing.categoria}</h3>
+        <h3 className="text-lg font-semibold text-sb-title capitalize">{pairing.categoria}</h3>
       </div>
 
-      <p className="mt-4 text-pretty text-sm leading-relaxed text-zinc-300">
+      <p className="mt-4 text-pretty text-sm leading-relaxed text-sb-body">
         {pairing.descripcion}
       </p>
 
-      <ul className="mt-5 divide-y divide-white/5 border-y border-white/5">
+      <ul className="mt-5 divide-y divide-sb-border border-y border-sb-border">
         {pairing.platos.map((plato, i) => (
           <motion.li
             key={plato}
@@ -38,8 +38,8 @@ export function PairingCard({ pairing, icon }: PairingCardProps) {
             transition={{ duration: 0.35, delay: 0.05 + i * 0.05 }}
             className="flex items-center gap-2.5 py-2.5"
           >
-            <Check className="h-4 w-4 shrink-0 text-amber-500" aria-hidden />
-            <span className="text-sm font-medium text-zinc-300">{plato}</span>
+            <Check className="h-4 w-4 shrink-0 text-sb-accent" aria-hidden />
+            <span className="text-sm font-medium text-sb-body">{plato}</span>
           </motion.li>
         ))}
       </ul>
