@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { PlatoSugerido } from '../../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Sparkles, UtensilsCrossed } from 'lucide-react'
@@ -90,31 +90,77 @@ interface SuggestedDishesProps {
 /** Carrusel horizontal de platos sugeridos con snap-scroll y controles. */
 export function SuggestedDishes({ platos }: SuggestedDishesProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState(0)
+  const reduceMotion = useReducedMotion()
+  const [pageCount, setPageCount] = useState(1)
+  const [activePage, setActivePage] = useState(0)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
-  const step = () => {
+  const updateMetrics = useCallback(() => {
     const el = scrollerRef.current
-    const card = el?.querySelector<HTMLElement>('[data-dish-card]')
-    return card ? card.offsetWidth + 16 : 280
-  }
+    if (!el) return
+
+    const card = el.querySelector<HTMLElement>('[data-dish-card]')
+    const cardWidth = card ? card.offsetWidth + 16 : 280
+    const visibleCount = Math.max(1, Math.floor((el.clientWidth + 16) / cardWidth))
+    const totalPages = Math.max(1, Math.ceil(platos.length / visibleCount))
+    setPageCount(totalPages)
+
+    const maxScroll = el.scrollWidth - el.clientWidth
+    setCanScrollLeft(el.scrollLeft > 2)
+    setCanScrollRight(maxScroll > 2 && el.scrollLeft < maxScroll - 2)
+
+    if (maxScroll <= 2) {
+      setActivePage(0)
+    } else if (el.scrollLeft >= maxScroll - 5) {
+      setActivePage(totalPages - 1)
+    } else {
+      const progress = el.scrollLeft / maxScroll
+      setActivePage(Math.min(totalPages - 1, Math.max(0, Math.round(progress * (totalPages - 1)))))
+    }
+  }, [platos.length])
+
+  useEffect(() => {
+    const el = scrollerRef.current
+    if (!el) return
+
+    updateMetrics()
+
+    const ro = new ResizeObserver(() => {
+      updateMetrics()
+    })
+    ro.observe(el)
+
+    return () => ro.disconnect()
+  }, [updateMetrics])
 
   const move = (dir: 1 | -1) => {
     const el = scrollerRef.current
     if (!el) return
-    el.scrollBy({ left: dir * step(), behavior: 'smooth' })
+    const card = el.querySelector<HTMLElement>('[data-dish-card]')
+    const cardWidth = card ? card.offsetWidth + 16 : 280
+    const visibleCount = Math.max(1, Math.floor((el.clientWidth + 16) / cardWidth))
+    const amount = visibleCount > 1 ? visibleCount * cardWidth : cardWidth
+    el.scrollBy({
+      left: dir * amount,
+      behavior: reduceMotion ? 'instant' : 'smooth',
+    })
   }
 
-  const goTo = (index: number) => {
+  const goToPage = (pageIndex: number) => {
     const el = scrollerRef.current
     if (!el) return
-    el.scrollTo({ left: index * step(), behavior: 'smooth' })
+    const maxScroll = el.scrollWidth - el.clientWidth
+    if (pageCount <= 1 || maxScroll <= 0) return
+    const targetScroll = (pageIndex / (pageCount - 1)) * maxScroll
+    el.scrollTo({
+      left: targetScroll,
+      behavior: reduceMotion ? 'instant' : 'smooth',
+    })
   }
 
   const handleScroll = () => {
-    const el = scrollerRef.current
-    if (!el) return
-    const index = Math.round(el.scrollLeft / step())
-    setActive(Math.min(platos.length - 1, Math.max(0, index)))
+    updateMetrics()
   }
 
   return (
@@ -128,17 +174,19 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
 
         <div className="flex shrink-0 gap-1.5">
           <button
+            type="button"
             onClick={() => move(-1)}
             aria-label="Platos anteriores"
-            disabled={active === 0}
+            disabled={!canScrollLeft}
             className="grid h-11 w-11 place-items-center rounded-full border border-sb-border bg-sb-fill text-sb-body transition-colors hover:text-sb-accent focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-sb-body"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
           <button
+            type="button"
             onClick={() => move(1)}
             aria-label="Más platos"
-            disabled={active >= platos.length - 1}
+            disabled={!canScrollRight}
             className="grid h-11 w-11 place-items-center rounded-full border border-sb-border bg-sb-fill text-sb-body transition-colors hover:text-sb-accent focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:text-sb-body"
           >
             <ChevronRight className="h-4 w-4" aria-hidden />
@@ -149,32 +197,39 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
-        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 scroll-pl-4 [scrollbar-width:none] sm:mx-0 sm:px-0 sm:scroll-pl-0 [&::-webkit-scrollbar]:hidden"
       >
         {platos.map((plato, i) => (
           <DishCard key={`${plato.nombre}-${i}`} plato={plato} index={i} />
         ))}
       </div>
 
-      {/* Un punto por plato: pastilla de 6px, área de toque de 44px */}
-      <div className="mt-1 flex items-center justify-center">
-        {platos.map((plato, i) => (
-          <button
-            key={`${plato.nombre}-${i}`}
-            type="button"
-            onClick={() => goTo(i)}
-            aria-label={`Ir al plato ${i + 1}: ${plato.nombre}`}
-            aria-current={i === active ? 'true' : undefined}
-            className="grid h-11 place-items-center px-1.5 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
-          >
-            <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active ? 'w-6 bg-amber-500' : 'w-1.5 bg-sb-muted/50'
-              }`}
-            />
-          </button>
-        ))}
-      </div>
+      {/* Indicadores de página / navegación: adaptados dinámicamente según cuántas tarjetas caben */}
+      {pageCount > 1 && (
+        <div
+          role="tablist"
+          aria-label="Páginas de platos sugeridos"
+          className="mt-1 flex items-center justify-center"
+        >
+          {Array.from({ length: pageCount }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              role="tab"
+              aria-selected={i === activePage}
+              onClick={() => goToPage(i)}
+              aria-label={`Ir a la página ${i + 1} de ${pageCount}`}
+              className="grid h-11 place-items-center px-1.5 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
+            >
+              <span
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === activePage ? 'w-6 bg-amber-500' : 'w-1.5 bg-sb-muted/50'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   )
 }
