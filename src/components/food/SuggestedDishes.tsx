@@ -87,62 +87,69 @@ interface SuggestedDishesProps {
   platos: PlatoSugerido[]
 }
 
+type CarruselMetrics = {
+  step: number
+  pageCount: number
+  maxScroll: number
+}
+
 /** Carrusel horizontal de platos sugeridos con snap-scroll y controles. */
 export function SuggestedDishes({ platos }: SuggestedDishesProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
+  const metricsRef = useRef<CarruselMetrics>({ step: 280, pageCount: 1, maxScroll: 0 })
   const reduceMotion = useReducedMotion()
   const [pageCount, setPageCount] = useState(1)
   const [activePage, setActivePage] = useState(0)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
 
-  const updateMetrics = useCallback(() => {
+  const applyScroll = useCallback((scrollLeft: number) => {
+    const { pageCount: pages, maxScroll } = metricsRef.current
+    const nextLeft = scrollLeft > 2
+    const nextRight = maxScroll > 2 && scrollLeft < maxScroll - 2
+    let nextPage = 0
+    if (maxScroll > 2) {
+      nextPage =
+        scrollLeft >= maxScroll - 5
+          ? pages - 1
+          : Math.min(pages - 1, Math.max(0, Math.round((scrollLeft / maxScroll) * (pages - 1))))
+    }
+    setCanScrollLeft((prev) => (prev === nextLeft ? prev : nextLeft))
+    setCanScrollRight((prev) => (prev === nextRight ? prev : nextRight))
+    setActivePage((prev) => (prev === nextPage ? prev : nextPage))
+  }, [])
+
+  // Geometría solo cuando cambia el tamaño. El scroll no vuelve a leer el layout.
+  const measure = useCallback(() => {
     const el = scrollerRef.current
     if (!el) return
-
     const card = el.querySelector<HTMLElement>('[data-dish-card]')
     const cardWidth = card ? card.offsetWidth + 16 : 280
     const visibleCount = Math.max(1, Math.floor((el.clientWidth + 16) / cardWidth))
-    const totalPages = Math.max(1, Math.ceil(platos.length / visibleCount))
-    setPageCount(totalPages)
-
-    const maxScroll = el.scrollWidth - el.clientWidth
-    setCanScrollLeft(el.scrollLeft > 2)
-    setCanScrollRight(maxScroll > 2 && el.scrollLeft < maxScroll - 2)
-
-    if (maxScroll <= 2) {
-      setActivePage(0)
-    } else if (el.scrollLeft >= maxScroll - 5) {
-      setActivePage(totalPages - 1)
-    } else {
-      const progress = el.scrollLeft / maxScroll
-      setActivePage(Math.min(totalPages - 1, Math.max(0, Math.round(progress * (totalPages - 1)))))
+    const pages = Math.max(1, Math.ceil(platos.length / visibleCount))
+    metricsRef.current = {
+      step: visibleCount > 1 ? visibleCount * cardWidth : cardWidth,
+      pageCount: pages,
+      maxScroll: Math.max(0, el.scrollWidth - el.clientWidth),
     }
-  }, [platos.length])
+    setPageCount((prev) => (prev === pages ? prev : pages))
+    applyScroll(el.scrollLeft)
+  }, [platos.length, applyScroll])
 
   useEffect(() => {
     const el = scrollerRef.current
     if (!el) return
-
-    updateMetrics()
-
-    const ro = new ResizeObserver(() => {
-      updateMetrics()
-    })
+    measure()
+    const ro = new ResizeObserver(() => measure())
     ro.observe(el)
-
     return () => ro.disconnect()
-  }, [updateMetrics])
+  }, [measure])
 
   const move = (dir: 1 | -1) => {
     const el = scrollerRef.current
     if (!el) return
-    const card = el.querySelector<HTMLElement>('[data-dish-card]')
-    const cardWidth = card ? card.offsetWidth + 16 : 280
-    const visibleCount = Math.max(1, Math.floor((el.clientWidth + 16) / cardWidth))
-    const amount = visibleCount > 1 ? visibleCount * cardWidth : cardWidth
     el.scrollBy({
-      left: dir * amount,
+      left: dir * metricsRef.current.step,
       behavior: reduceMotion ? 'instant' : 'smooth',
     })
   }
@@ -150,17 +157,18 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
   const goToPage = (pageIndex: number) => {
     const el = scrollerRef.current
     if (!el) return
-    const maxScroll = el.scrollWidth - el.clientWidth
-    if (pageCount <= 1 || maxScroll <= 0) return
-    const targetScroll = (pageIndex / (pageCount - 1)) * maxScroll
+    const { pageCount: pages, maxScroll } = metricsRef.current
+    if (pages <= 1 || maxScroll <= 0) return
     el.scrollTo({
-      left: targetScroll,
+      left: (pageIndex / (pages - 1)) * maxScroll,
       behavior: reduceMotion ? 'instant' : 'smooth',
     })
   }
 
   const handleScroll = () => {
-    updateMetrics()
+    const el = scrollerRef.current
+    if (!el) return
+    applyScroll(el.scrollLeft)
   }
 
   return (

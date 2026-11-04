@@ -73,8 +73,15 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,ico}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,ico,json,txt,xml}'],
         navigateFallback: 'index.html',
+        navigateFallbackDenylist: [
+          /^\/\.well-known\//,
+          /\/ai-catalog\.json$/,
+          /\/llms\.txt$/,
+          /\/robots\.txt$/,
+          /\/sitemap\.xml$/,
+        ],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'document',
