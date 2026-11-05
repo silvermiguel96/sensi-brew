@@ -1,19 +1,19 @@
-import type { EstadisticasVitales, Rango } from '../types/beer'
+import type { Range, VitalStats as VitalStatsData } from '../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Droplet, Flame, Percent } from 'lucide-react'
 import { SRM_GRADIENT } from '../lib/srm'
 
-interface VitalStatProps {
+interface StatBarProps {
   label: string
   unit: string
-  range: [number, number]
+  range: Range
   max: number
   icon: React.ReactNode
   segmentClass: string
   trackStyle?: React.CSSProperties
 }
 
-function VitalStat({
+function StatBar({
   label,
   unit,
   range,
@@ -21,7 +21,7 @@ function VitalStat({
   icon,
   segmentClass,
   trackStyle,
-}: VitalStatProps) {
+}: StatBarProps) {
   const reduceMotion = useReducedMotion()
   const [min, maxVal] = range
   const left = Math.max(0, (min / max) * 100)
@@ -59,7 +59,7 @@ function VitalStat({
   )
 }
 
-function FilaVital(props: Omit<VitalStatProps, 'range'> & { range: Rango | null }) {
+function StatRow(props: Omit<StatBarProps, 'range'> & { range: Range | null }) {
   if (!props.range) {
     return (
       <div className="flex items-baseline justify-between gap-2">
@@ -72,34 +72,34 @@ function FilaVital(props: Omit<VitalStatProps, 'range'> & { range: Rango | null 
     )
   }
 
-  return <VitalStat {...props} range={props.range} />
+  return <StatBar {...props} range={props.range} />
 }
 
-/** Muestra las tres estadísticas vitales (IBU / SRM / ABV) con su rango. */
-export function VitalesBar({ estadisticas }: { estadisticas: EstadisticasVitales }) {
+/** The three vital statistics (IBU / SRM / ABV) with their ranges. */
+export function VitalStats({ stats }: { stats: VitalStatsData }) {
   return (
     <div className="space-y-5">
-      <FilaVital
+      <StatRow
         label="Amargor"
         unit="IBU"
-        range={estadisticas.ibu}
+        range={stats.ibu}
         max={100}
         icon={<Flame className="h-3.5 w-3.5" />}
         segmentClass="bg-amber-500"
       />
-      <FilaVital
+      <StatRow
         label="Color"
         unit="SRM"
-        range={estadisticas.srm}
+        range={stats.srm}
         max={40}
         icon={<Droplet className="h-3.5 w-3.5" />}
         segmentClass="bg-amber-400"
         trackStyle={{ background: SRM_GRADIENT }}
       />
-      <FilaVital
+      <StatRow
         label="Alcohol"
         unit="% vol"
-        range={estadisticas.abv}
+        range={stats.abv}
         max={12}
         icon={<Percent className="h-3.5 w-3.5" />}
         segmentClass="bg-amber-500"

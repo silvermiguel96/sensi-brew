@@ -1,7 +1,9 @@
+import type { Range } from '../types/beer'
+
 /**
- * Escala SRM (Standard Reference Method) traducida a colores CSS.
- * Permite pintar el "color real" de la cerveza sin ningún asset de imagen:
- * todo es gradiente generado, ideal para una PWA offline ligera.
+ * SRM (Standard Reference Method) scale mapped to CSS colors.
+ * Paints the "real" beer color without any image asset:
+ * everything is a generated gradient, ideal for a light offline PWA.
  */
 const SRM_SCALE: Array<{ srm: number; hex: string }> = [
   { srm: 2, hex: '#f7efb0' },
@@ -21,7 +23,12 @@ const SRM_SCALE: Array<{ srm: number; hex: string }> = [
   { srm: 40, hex: '#2c0d0e' },
 ]
 
-/** Devuelve el color hex más cercano a un valor SRM. */
+/** Midpoint of an SRM range; 10 (amber) when the style has variable color. */
+export function srmMid(range: Range | null): number {
+  return range ? (range[0] + range[1]) / 2 : 10
+}
+
+/** Returns the closest hex color for an SRM value. */
 export function srmToColor(srm: number): string {
   if (srm <= SRM_SCALE[0].srm) return SRM_SCALE[0].hex
   const last = SRM_SCALE[SRM_SCALE.length - 1]
@@ -34,12 +41,7 @@ export function srmToColor(srm: number): string {
   return nearest.hex
 }
 
-/** Color del rango SRM de una receta (usa el punto medio). */
-export function srmRangeToColor(range: [number, number]): string {
-  return srmToColor((range[0] + range[1]) / 2)
-}
-
-/** Oscurece un hex (factor 0 = negro, 1 = color original). */
+/** Darkens a hex color (factor 0 = black, 1 = original color). */
 export function shade(hex: string, factor: number): string {
   const clean = hex.replace('#', '')
   const num = parseInt(clean, 16)
@@ -49,7 +51,7 @@ export function shade(hex: string, factor: number): string {
   return `rgb(${r}, ${g}, ${b})`
 }
 
-/** Gradiente vertical usado en la barra de rango SRM. */
+/** Horizontal gradient used by the SRM range bar. */
 export const SRM_GRADIENT = `linear-gradient(90deg, ${SRM_SCALE.map(
   (s) => `${s.hex} ${Math.round((s.srm / 40) * 100)}%`,
 ).join(', ')})`

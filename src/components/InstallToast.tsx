@@ -3,55 +3,55 @@ import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Download, X, type LucideIcon } from 'lucide-react'
 import { useInstallPrompt } from '../hooks/useInstallPrompt'
-import { GuiaDesplegable } from './InstallBanner'
+import { IosInstallGuide } from './InstallBanner'
 
-/** Retraso antes de mostrar el toast (ms) para no interrumpir la llegada. */
-const RETRASO_MS = 5000
+/** Delay before showing the toast (ms) so it doesn't interrupt arrival. */
+const DELAY_MS = 5000
 
 /**
- * Toast inferior discreto que invita a instalar la app fuera del Home
- * (en el Home ya está el banner, así que aquí no se duplica).
- * Se oculta si ya está instalada o si el usuario pospuso la invitación.
+ * Discreet bottom toast inviting the user to install the app outside Home
+ * (Home already has the banner, so it is not duplicated there).
+ * Hidden once installed or when the user postponed the invitation.
  */
 export function InstallToast() {
   const reduceMotion = useReducedMotion()
   const location = useLocation()
-  const { disponible, puedeInstalar, esIOS, instalar, posponer } = useInstallPrompt()
+  const { available, canInstall, isIOS, install, postpone } = useInstallPrompt()
   const [visible, setVisible] = useState(false)
-  const [guiaAbierta, setGuiaAbierta] = useState(false)
+  const [guideOpen, setGuideOpen] = useState(false)
 
-  const enHome = location.pathname === '/'
-  const mostrar = disponible && !enHome && visible
+  const onHome = location.pathname === '/'
+  const show = available && !onHome && visible
 
   useEffect(() => {
-    if (!disponible || enHome) return
-    const t = window.setTimeout(() => setVisible(true), RETRASO_MS)
+    if (!available || onHome) return
+    const t = window.setTimeout(() => setVisible(true), DELAY_MS)
     return () => window.clearTimeout(t)
-  }, [disponible, enHome])
+  }, [available, onHome])
 
-  const cerrar = () => {
+  const close = () => {
     setVisible(false)
-    posponer()
+    postpone()
   }
 
-  const accion: {
-    etiqueta: string
+  const action: {
+    label: string
     onClick: () => void
     expanded?: boolean
-    icono?: LucideIcon
-  } | null = esIOS
+    icon?: LucideIcon
+  } | null = isIOS
     ? {
-        etiqueta: 'Ver instrucciones',
-        onClick: () => setGuiaAbierta((v) => !v),
-        expanded: guiaAbierta,
+        label: 'Ver instrucciones',
+        onClick: () => setGuideOpen((v) => !v),
+        expanded: guideOpen,
       }
-    : puedeInstalar
-      ? { etiqueta: 'Instalar', onClick: () => void instalar() }
+    : canInstall
+      ? { label: 'Instalar', onClick: () => void install() }
       : null
 
   return (
     <AnimatePresence>
-      {mostrar && (
+      {show && (
         <motion.div
           role="status"
           aria-live="polite"
@@ -69,40 +69,40 @@ export function InstallToast() {
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-sb-title">Llévate SensiBrew contigo</p>
               <p className="mt-0.5 text-xs leading-relaxed text-sb-body">
-                {esIOS
+                {isIOS
                   ? 'En iPhone se instala desde Safari en 3 pasos.'
                   : 'Instálala y úsala sin internet, desde tu pantalla de inicio.'}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                {accion && (
+                {action && (
                   <button
                     type="button"
-                    onClick={accion.onClick}
-                    aria-expanded={accion.expanded}
+                    onClick={action.onClick}
+                    aria-expanded={action.expanded}
                     className="btn-accent px-4 py-1.5 text-xs"
                   >
-                    {accion.icono && <accion.icono className="h-4 w-4" aria-hidden />}
-                    {accion.etiqueta}
+                    {action.icon && <action.icon className="h-4 w-4" aria-hidden />}
+                    {action.label}
                   </button>
                 )}
                 <button
                   type="button"
-                  onClick={cerrar}
+                  onClick={close}
                   className="rounded-full px-3 py-1.5 text-xs font-medium text-sb-muted transition-colors hover:text-sb-text focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
                 >
                   Ahora no
                 </button>
               </div>
 
-              <GuiaDesplegable
-                abierta={guiaAbierta && esIOS}
-                compacta
+              <IosInstallGuide
+                open={guideOpen && isIOS}
+                compact
                 className="mt-3 border-t border-sb-border pt-3"
               />
             </div>
             <button
               type="button"
-              onClick={cerrar}
+              onClick={close}
               aria-label="Cerrar invitación a instalar"
               className="shrink-0 rounded-full p-1 text-sb-muted transition-colors hover:text-sb-text focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
             >

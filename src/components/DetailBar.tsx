@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Check, Share2 } from 'lucide-react'
 
-/** Enlace al catálogo y botón de compartir, común a las fichas de estilo. */
-export function BarraDetalle({ titulo }: { titulo: string }) {
-  const [copiado, setCopiado] = useState(false)
+/** Back-to-catalog link and share button shown on style pages. */
+export function DetailBar({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false)
 
-  const compartir = async () => {
+  const share = async () => {
     const url = window.location.href
     if (navigator.share) {
       try {
-        // Solo la URL: en macOS el campo `text` se pega al enlace y lo rompe
-        await navigator.share({ title: titulo, url })
+        // URL only: on macOS the `text` field gets glued to the link and breaks it
+        await navigator.share({ title, url })
         return
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') return
@@ -19,8 +19,8 @@ export function BarraDetalle({ titulo }: { titulo: string }) {
     }
     if (!navigator.clipboard) return
     await navigator.clipboard.writeText(url)
-    setCopiado(true)
-    window.setTimeout(() => setCopiado(false), 2000)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -33,11 +33,11 @@ export function BarraDetalle({ titulo }: { titulo: string }) {
       </Link>
       <button
         type="button"
-        onClick={compartir}
+        onClick={share}
         aria-live="polite"
         className="inline-flex items-center gap-1.5 rounded-full border border-sb-border bg-sb-fill px-3 py-1.5 text-xs font-semibold text-sb-body transition-colors hover:border-sb-border-strong hover:bg-sb-fill-strong hover:text-sb-title focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
       >
-        {copiado ? (
+        {copied ? (
           <>
             <Check className="h-3.5 w-3.5 text-sb-accent" aria-hidden />
             <span className="text-sb-accent">¡Enlace copiado!</span>

@@ -14,46 +14,46 @@ import {
 import { useInstallPrompt } from '../hooks/useInstallPrompt'
 
 /**
- * Pasos para instalar en iPhone/iPad (Safari no dispara el prompt nativo,
- * así que hay que guiar: Compartir → Añadir a pantalla de inicio).
+ * Install steps for iPhone/iPad (Safari does not fire the native prompt,
+ * so the user is guided: Share → Add to Home Screen).
  */
-function GuiaIOS({ compacta = false }: { compacta?: boolean }) {
-  const pasos = [
-    { icono: Share, texto: 'Toca el botón Compartir (cuadrado con flecha ↑) de Safari.' },
-    { icono: ArrowUpFromLine, texto: 'Desliza y elige “Añadir a pantalla de inicio”.' },
-    { icono: Plus, texto: 'Pulsa “Añadir” arriba a la derecha. ¡Listo!' },
+function IosSteps({ compact = false }: { compact?: boolean }) {
+  const steps = [
+    { icon: Share, text: 'Toca el botón Compartir (cuadrado con flecha ↑) de Safari.' },
+    { icon: ArrowUpFromLine, text: 'Desliza y elige “Añadir a pantalla de inicio”.' },
+    { icon: Plus, text: 'Pulsa “Añadir” arriba a la derecha. ¡Listo!' },
   ]
 
   return (
-    <ol className={`flex flex-col gap-2 ${compacta ? 'text-xs' : 'text-sm'}`}>
-      {pasos.map(({ icono: Icono, texto }, i) => (
+    <ol className={`flex flex-col gap-2 ${compact ? 'text-xs' : 'text-sm'}`}>
+      {steps.map(({ icon: Icon, text }, i) => (
         <li key={i} className="flex items-start gap-2.5 text-sb-body">
           <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/15 text-[11px] font-bold text-sb-accent">
             {i + 1}
           </span>
-          <Icono className="mt-0.5 h-4 w-4 shrink-0 text-sb-accent" aria-hidden />
-          <span className="leading-snug">{texto}</span>
+          <Icon className="mt-0.5 h-4 w-4 shrink-0 text-sb-accent" aria-hidden />
+          <span className="leading-snug">{text}</span>
         </li>
       ))}
     </ol>
   )
 }
 
-/** Guía de iOS que se abre y se cierra. El contenedor lo pone quien la usa. */
-export function GuiaDesplegable({
-  abierta,
-  compacta = false,
+/** Collapsible iOS guide. The caller provides the container styles. */
+export function IosInstallGuide({
+  open,
+  compact = false,
   className,
 }: {
-  abierta: boolean
-  compacta?: boolean
+  open: boolean
+  compact?: boolean
   className: string
 }) {
   const reduceMotion = useReducedMotion()
 
   return (
     <AnimatePresence initial={false}>
-      {abierta && (
+      {open && (
         <motion.div
           initial={reduceMotion ? false : { height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
@@ -62,7 +62,7 @@ export function GuiaDesplegable({
           className="overflow-hidden"
         >
           <div className={className}>
-            <GuiaIOS compacta={compacta} />
+            <IosSteps compact={compact} />
           </div>
         </motion.div>
       )}
@@ -71,30 +71,30 @@ export function GuiaDesplegable({
 }
 
 /**
- * Banner del Home que invita a instalar la PWA.
- * Muestra el botón nativo (Chrome/Edge) o la guía para iPhone (Safari).
- * Se oculta si ya está instalada o si el usuario pospuso la invitación.
+ * Home banner inviting the user to install the PWA.
+ * Shows the native button (Chrome/Edge) or the iPhone guide (Safari).
+ * Hidden once installed or when the user postponed the invitation.
  */
 export function InstallBanner() {
   const reduceMotion = useReducedMotion()
-  const { disponible, puedeInstalar, esIOS, instalar, posponer } = useInstallPrompt()
-  const [guiaAbierta, setGuiaAbierta] = useState(false)
+  const { available, canInstall, isIOS, install, postpone } = useInstallPrompt()
+  const [guideOpen, setGuideOpen] = useState(false)
 
-  if (!disponible) return null
+  if (!available) return null
 
-  const accion: {
-    etiqueta: string
+  const action: {
+    label: string
     onClick: () => void
     expanded?: boolean
-    icono?: LucideIcon
-  } | null = esIOS
+    icon?: LucideIcon
+  } | null = isIOS
     ? {
-        etiqueta: 'Cómo instalar en iPhone',
-        onClick: () => setGuiaAbierta((v) => !v),
-        expanded: guiaAbierta,
+        label: 'Cómo instalar en iPhone',
+        onClick: () => setGuideOpen((v) => !v),
+        expanded: guideOpen,
       }
-    : puedeInstalar
-      ? { etiqueta: 'Instalar app', onClick: () => void instalar(), icono: Download }
+    : canInstall
+      ? { label: 'Instalar app', onClick: () => void install(), icon: Download }
       : null
 
   return (
@@ -105,7 +105,7 @@ export function InstallBanner() {
       transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
       className="glass-panel relative mt-8 overflow-hidden rounded-2xl p-5 sm:p-6"
     >
-      {/* Brillo ámbar sutil en la esquina */}
+      {/* Subtle amber glow in the corner */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(251,191,36,0.18),transparent_70%)]"
@@ -139,20 +139,20 @@ export function InstallBanner() {
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-stretch">
-          {accion && (
+          {action && (
             <button
               type="button"
-              onClick={accion.onClick}
-              aria-expanded={accion.expanded}
+              onClick={action.onClick}
+              aria-expanded={action.expanded}
               className="btn-accent px-5 py-2.5 text-sm"
             >
-              {accion.icono && <accion.icono className="h-4 w-4" aria-hidden />}
-              {accion.etiqueta}
+              {action.icon && <action.icon className="h-4 w-4" aria-hidden />}
+              {action.label}
             </button>
           )}
           <button
             type="button"
-            onClick={posponer}
+            onClick={postpone}
             className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium text-sb-muted transition-colors hover:text-sb-text focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none"
           >
             <X className="mr-1 h-3.5 w-3.5" aria-hidden />
@@ -161,8 +161,8 @@ export function InstallBanner() {
         </div>
       </div>
 
-      <GuiaDesplegable
-        abierta={guiaAbierta && esIOS}
+      <IosInstallGuide
+        open={guideOpen && isIOS}
         className="mt-4 rounded-xl border border-sb-border bg-sb-fill p-4"
       />
     </motion.section>

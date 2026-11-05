@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { PlatoSugerido } from '../../types/beer'
+import type { SuggestedDish } from '../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Sparkles, UtensilsCrossed } from 'lucide-react'
-import { CATEGORIAS_MARIDAJE } from '../../lib/pairing'
-import { SectionTitle } from '../SectionTitle'
+import { DISH_CATEGORIES } from '../lib/pairing'
+import { SectionTitle } from './SectionTitle'
 
 interface DishCardProps {
-  plato: PlatoSugerido
+  dish: SuggestedDish
   index: number
 }
 
-/** Tarjeta de plato: "imagen" generada (gradiente + emoji), afinidad y principio. */
-function DishCard({ plato, index }: DishCardProps) {
+/** Dish card: generated "image" (gradient + emoji), affinity and principle. */
+function DishCard({ dish, index }: DishCardProps) {
   const reduceMotion = useReducedMotion()
-  const categoria = CATEGORIAS_MARIDAJE[plato.categoria]
-  const Icono = categoria.icon
+  const category = DISH_CATEGORIES[dish.category]
+  const Icon = category.icon
 
   return (
     <motion.article
@@ -26,38 +26,38 @@ function DishCard({ plato, index }: DishCardProps) {
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       className="glass-panel group w-[250px] shrink-0 snap-start overflow-hidden rounded-2xl transition-colors hover:border-sb-border sm:w-[270px]"
     >
-      {/* "Imagen" del plato */}
+      {/* Dish "image" */}
       <div
         className="relative flex h-36 items-center justify-center overflow-hidden"
-        style={{ background: categoria.gradient }}
+        style={{ background: category.gradient }}
         aria-hidden
       >
         <span className="text-6xl drop-shadow-[0_6px_12px_rgba(0,0,0,0.45)] transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
-          {plato.emoji}
+          {dish.emoji}
         </span>
 
-        {/* Brillo / reflejo */}
+        {/* Shine / reflection */}
         <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-zinc-950/60 via-transparent to-white/10" />
 
-        {/* Categoría */}
+        {/* Category */}
         <span
-          className={`absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase ${categoria.chipClass}`}
+          className={`absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase ${category.chipClass}`}
         >
-          <Icono className="h-3 w-3" />
-          {categoria.label}
+          <Icon className="h-3 w-3" />
+          {category.label}
         </span>
 
-        {/* Afinidad */}
+        {/* Affinity */}
         <div
           className="absolute right-2.5 bottom-2.5 flex items-end gap-1 rounded-full bg-zinc-950/80 px-2 py-1"
           role="img"
-          aria-label={`Afinidad ${plato.afinidad} de 5`}
+          aria-label={`Afinidad ${dish.affinity} de 5`}
         >
           {Array.from({ length: 5 }).map((_, i) => (
             <span
               key={i}
               className={`w-1 shrink-0 rounded-full ${
-                i < plato.afinidad ? 'bg-amber-400' : 'bg-white/25'
+                i < dish.affinity ? 'bg-amber-400' : 'bg-white/25'
               }`}
               style={{ height: 6 + i * 2 }}
             />
@@ -65,9 +65,9 @@ function DishCard({ plato, index }: DishCardProps) {
         </div>
       </div>
 
-      {/* Contenido */}
+      {/* Content */}
       <div className="p-4">
-        <h3 className="text-sm leading-snug font-bold text-sb-title">{plato.nombre}</h3>
+        <h3 className="text-sm leading-snug font-bold text-sb-title">{dish.name}</h3>
 
         <motion.span
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
@@ -76,7 +76,7 @@ function DishCard({ plato, index }: DishCardProps) {
           className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-sb-accent transition-colors group-hover:bg-amber-500/15"
         >
           <Sparkles className="h-3 w-3 text-sb-accent" />
-          {plato.principio}
+          {dish.principle}
         </motion.span>
       </div>
     </motion.article>
@@ -84,19 +84,19 @@ function DishCard({ plato, index }: DishCardProps) {
 }
 
 interface SuggestedDishesProps {
-  platos: PlatoSugerido[]
+  dishes: SuggestedDish[]
 }
 
-type CarruselMetrics = {
+type CarouselMetrics = {
   step: number
   pageCount: number
   maxScroll: number
 }
 
-/** Carrusel horizontal de platos sugeridos con snap-scroll y controles. */
-export function SuggestedDishes({ platos }: SuggestedDishesProps) {
+/** Horizontal carousel of suggested dishes with snap scrolling and controls. */
+export function SuggestedDishes({ dishes }: SuggestedDishesProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
-  const metricsRef = useRef<CarruselMetrics>({ step: 280, pageCount: 1, maxScroll: 0 })
+  const metricsRef = useRef<CarouselMetrics>({ step: 280, pageCount: 1, maxScroll: 0 })
   const reduceMotion = useReducedMotion()
   const [pageCount, setPageCount] = useState(1)
   const [activePage, setActivePage] = useState(0)
@@ -119,14 +119,14 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
     setActivePage((prev) => (prev === nextPage ? prev : nextPage))
   }, [])
 
-  // Geometría solo cuando cambia el tamaño. El scroll no vuelve a leer el layout.
+  // Measure geometry only on resize; scrolling never re-reads the layout.
   const measure = useCallback(() => {
     const el = scrollerRef.current
     if (!el) return
     const card = el.querySelector<HTMLElement>('[data-dish-card]')
     const cardWidth = card ? card.offsetWidth + 16 : 280
     const visibleCount = Math.max(1, Math.floor((el.clientWidth + 16) / cardWidth))
-    const pages = Math.max(1, Math.ceil(platos.length / visibleCount))
+    const pages = Math.max(1, Math.ceil(dishes.length / visibleCount))
     metricsRef.current = {
       step: visibleCount > 1 ? visibleCount * cardWidth : cardWidth,
       pageCount: pages,
@@ -134,7 +134,7 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
     }
     setPageCount((prev) => (prev === pages ? prev : pages))
     applyScroll(el.scrollLeft)
-  }, [platos.length, applyScroll])
+  }, [dishes.length, applyScroll])
 
   useEffect(() => {
     const el = scrollerRef.current
@@ -207,12 +207,12 @@ export function SuggestedDishes({ platos }: SuggestedDishesProps) {
         onScroll={handleScroll}
         className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 scroll-pl-4 [scrollbar-width:none] sm:mx-0 sm:px-0 sm:scroll-pl-0 [&::-webkit-scrollbar]:hidden"
       >
-        {platos.map((plato, i) => (
-          <DishCard key={`${plato.nombre}-${i}`} plato={plato} index={i} />
+        {dishes.map((dish, i) => (
+          <DishCard key={`${dish.name}-${i}`} dish={dish} index={i} />
         ))}
       </div>
 
-      {/* Indicadores de página / navegación: adaptados dinámicamente según cuántas tarjetas caben */}
+      {/* Page indicators: adapt to how many cards fit on screen */}
       {pageCount > 1 && (
         <div
           role="tablist"

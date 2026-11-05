@@ -1,65 +1,72 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import { categorias, searchBeers } from '../data/beers'
-import type { Beer, Rango } from '../types/beer'
+import { getCategories, searchBeers } from '../data/beers'
+import type { Beer, Guide, Range } from '../types/beer'
 
-/** Opciones de orden del catálogo. */
-export type OrdenCatalogo = 'relevante' | 'az' | 'abv' | 'ibu'
+/** Catalog sort options. */
+export type SortOrder = 'relevant' | 'az' | 'abv' | 'ibu'
 
-export const ORDENES: { value: OrdenCatalogo; label: string }[] = [
-  { value: 'relevante', label: 'Relevante' },
+export const SORT_ORDERS: { value: SortOrder; label: string }[] = [
+  { value: 'relevant', label: 'Relevante' },
   { value: 'az', label: 'A–Z' },
   { value: 'abv', label: 'ABV ↓' },
   { value: 'ibu', label: 'IBU ↓' },
 ]
 
-const mid = (r: Rango | null) => (r ? (r[0] + r[1]) / 2 : 0)
+const mid = (r: Range | null) => (r ? (r[0] + r[1]) / 2 : 0)
 
-const comparadores = {
-  az: (a: Beer, b: Beer) => a.nombre_estilo.localeCompare(b.nombre_estilo, 'es'),
-  abv: (a: Beer, b: Beer) =>
-    mid(b.estadisticas_vitales.abv) - mid(a.estadisticas_vitales.abv),
-  ibu: (a: Beer, b: Beer) =>
-    mid(b.estadisticas_vitales.ibu) - mid(a.estadisticas_vitales.ibu),
-} satisfies Record<Exclude<OrdenCatalogo, 'relevante'>, (a: Beer, b: Beer) => number>
+const comparators = {
+  az: (a: Beer, b: Beer) => a.name.localeCompare(b.name, 'es'),
+  abv: (a: Beer, b: Beer) => mid(b.vitalStats.abv) - mid(a.vitalStats.abv),
+  ibu: (a: Beer, b: Beer) => mid(b.vitalStats.ibu) - mid(a.vitalStats.ibu),
+} satisfies Record<Exclude<SortOrder, 'relevant'>, (a: Beer, b: Beer) => number>
 
-/** Estado del buscador, filtro de categoría y orden del Home. */
-export function useBeers() {
+/** Search, category filter and sort state of the Home catalog for a guide. */
+export function useBeers(guide: Guide) {
   const [query, setQuery] = useState('')
-  const [categoria, setCategoria] = useState<string | null>(null)
-  const [orden, setOrden] = useState<OrdenCatalogo>('relevante')
+  const [category, setCategory] = useState<string | null>(null)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('relevant')
+  const [prevGuide, setPrevGuide] = useState(guide)
 
-  // React 19: diferir el query para mantener la respuesta del input fluida sin bloquear el hilo principal
+  // Reset the active category when the guide changes (React's pattern for state derived from props)
+  if (prevGuide !== guide) {
+    setPrevGuide(guide)
+    setCategory(null)
+  }
+
+  const categories = useMemo(() => getCategories(guide), [guide])
+
+  // Defer the query so typing stays responsive while filtering
   const deferredQuery = useDeferredValue(query)
   const results = useMemo(() => {
-    const base = searchBeers(deferredQuery, categoria)
-    if (orden === 'relevante') return base
-    return [...base].sort(comparadores[orden])
-  }, [deferredQuery, categoria, orden])
+    const base = searchBeers(guide, deferredQuery, category)
+    if (sortOrder === 'relevant') return base
+    return [...base].sort(comparators[sortOrder])
+  }, [guide, deferredQuery, category, sortOrder])
 
-  const toggleCategoria = (cat: string) => {
-    setCategoria((prev) => (prev === cat ? null : cat))
+  const toggleCategory = (cat: string) => {
+    setCategory((prev) => (prev === cat ? null : cat))
   }
 
-  /** Limpia búsqueda, filtro y orden (usado en el estado vacío). */
-  const limpiarFiltros = () => {
+  /** Clears search, filter and sort (used by the empty state). */
+  const clearFilters = () => {
     setQuery('')
-    setCategoria(null)
-    setOrden('relevante')
+    setCategory(null)
+    setSortOrder('relevant')
   }
 
-  const hayFiltros = query !== '' || categoria !== null || orden !== 'relevante'
+  const hasFilters = query !== '' || category !== null || sortOrder !== 'relevant'
 
   return {
     query,
     setQuery,
-    categoria,
-    setCategoria,
-    toggleCategoria,
-    orden,
-    setOrden,
+    category,
+    setCategory,
+    toggleCategory,
+    sortOrder,
+    setSortOrder,
     results,
-    categorias,
-    limpiarFiltros,
-    hayFiltros,
+    categories,
+    clearFilters,
+    hasFilters,
   }
 }

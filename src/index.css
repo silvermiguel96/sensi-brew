@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Solo el recorte latino: el CSS completo de la variable arrastraría el resto de alfabetos. */
+/* Latin subset only: the full variable-font CSS would pull in every other alphabet. */
 @font-face {
   font-family: 'Inter Variable';
   font-style: normal;
@@ -23,7 +23,7 @@
     U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* ── Tokens de tema (Tailwind v4) ───────────────────────────── */
+/* ── Theme tokens (Tailwind v4) ─────────────────────────────── */
 @theme {
   --color-amber-glow: #fbbf24;
   --color-foam: #f5efe3;
@@ -44,8 +44,8 @@
   --color-sb-accent: #fbbf24;
 }
 
-html[data-tema='claro'] {
-  /* Controles nativos (input, select, scrollbar) siguen el tema, no el SO */
+html[data-theme='light'] {
+  /* Native controls (input, select, scrollbar) follow the theme, not the OS */
   color-scheme: light;
   --color-sb-bg: #fafafa;
   --color-sb-title: #0c0a09;
@@ -98,7 +98,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Cursor de mano en todos los interactivos (checklist UX) */
+/* Pointer cursor on every interactive element (UX checklist) */
 a[href],
 button,
 [role='tab'],
@@ -129,8 +129,8 @@ button,
   background: var(--sb-scrollbar-thumb-hover);
 }
 
-/* ── Utilidades ─────────────────────────────────────────────── */
-/* Panel de vidrio con borde luminoso y profundidad sutil (temable) */
+/* ── Utilities ──────────────────────────────────────────────── */
+/* Glass panel with a luminous border and subtle depth (themeable) */
 @utility glass-panel {
   background: linear-gradient(160deg, var(--sb-glass-1), var(--sb-glass-2));
   border: 1px solid var(--color-sb-border);
@@ -140,16 +140,12 @@ button,
   backdrop-filter: blur(24px);
 }
 
-/* Píldora ámbar de acción principal. El padding y el tamaño van en el uso. */
+/* Primary amber action pill. Padding and size are set where it is used. */
 @utility btn-accent {
   @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-amber-500 font-bold text-zinc-950 transition-colors hover:bg-amber-400 focus-visible:ring-2 focus-visible:ring-sb-focus focus-visible:outline-none;
 }
 
-@utility text-balance-es {
-  text-wrap: balance;
-}
-
-/* Título con gradiente ámbar → crema */
+/* Amber → cream gradient title */
 @utility text-gradient-gold {
   background: linear-gradient(115deg,
       #fde68a 0%,
@@ -160,13 +156,13 @@ button,
   color: transparent;
 }
 
-/* En tema claro el gradiente claro perdería contraste: versión oscura */
-html[data-tema='claro'] .text-gradient-gold {
+/* In light theme the light gradient would lose contrast: dark version */
+html[data-theme='light'] .text-gradient-gold {
   background-image: linear-gradient(115deg, #92400e 0%, #b45309 45%, #292524 100%);
 }
 
-/* ── Recharts temable (radares) ─────────────────────────────── */
-/* Las propiedades CSS ganan a los atributos de presentación inlineados */
+/* ── Themeable Recharts (radar) ─────────────────────────────── */
+/* CSS properties win over inlined presentation attributes */
 .recharts-polar-grid line,
 .recharts-polar-grid circle,
 .recharts-polar-grid path {
@@ -177,18 +173,18 @@ html[data-tema='claro'] .text-gradient-gold {
   fill: var(--sb-radar-tick);
 }
 
-/* Solo el radar de perfil (ámbar); el de la ficha conserva su color SRM */
+/* Amber sensory radar */
 .radar-amber .recharts-radar-polygon {
   stroke: var(--sb-radar-line);
   fill: var(--sb-radar-line);
 }
 
-/* Contorno del vaso: visible en ambos temas */
-.vaso-contorno {
+/* Glass outline: visible in both themes */
+.glass-outline {
   stroke: var(--sb-glass-outline);
 }
 
-/* Brillo ámbar sutil al pasar el cursor */
+/* Subtle amber glow on hover */
 @utility glow-hover {
   transition:
     box-shadow 200ms ease,
@@ -201,7 +197,7 @@ html[data-tema='claro'] .text-gradient-gold {
     0 12px 32px -16px rgb(251 191 36 / 0.35);
 }
 
-/* ── Animaciones ────────────────────────────────────────────── */
+/* ── Animations ─────────────────────────────────────────────── */
 @keyframes bubble-rise {
   0% {
     transform: translateY(0) scale(0.8);

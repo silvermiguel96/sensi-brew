@@ -1,35 +1,32 @@
 import { useSyncExternalStore } from 'react'
+import { readStorage, writeStorage } from '../lib/storage'
 
-/** Evento `beforeinstallprompt` capturado por la PWA. */
+/** `beforeinstallprompt` event captured by the PWA. */
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-/** Clave de "pospuesto" en localStorage y su duración (7 días). */
-const CLAVE_POSPUESTO = 'sensibrew-install-pospuesto'
-const DURACION_POSPUESTO = 7 * 24 * 60 * 60 * 1000
+/** localStorage key for "postponed" and its duration (7 days). */
+const POSTPONED_KEY = 'sensibrew-install-postponed'
+const POSTPONED_DURATION = 7 * 24 * 60 * 60 * 1000
 
-type Estado = {
-  evento: BeforeInstallPromptEvent | null
-  instalada: boolean
-  pospuesto: boolean
+type State = {
+  event: BeforeInstallPromptEvent | null
+  installed: boolean
+  postponed: boolean
 }
 
-/** ¿El usuario pospuso la invitación hace menos de 7 días? */
-function pospuestoGuardado(): boolean {
-  try {
-    const ts = Number(localStorage.getItem(CLAVE_POSPUESTO))
-    return Number.isFinite(ts) && ts > 0 && Date.now() - ts < DURACION_POSPUESTO
-  } catch {
-    return false
-  }
+/** Did the user postpone the invitation less than 7 days ago? */
+function isPostponed(): boolean {
+  const ts = Number(readStorage(POSTPONED_KEY))
+  return Number.isFinite(ts) && ts > 0 && Date.now() - ts < POSTPONED_DURATION
 }
 
-/** ¿Es un iPhone/iPad? Safari no dispara `beforeinstallprompt`. */
-function esDispositivoIOS(): boolean {
+/** Is it an iPhone/iPad? Safari does not fire `beforeinstallprompt`. */
+function isIOSDevice(): boolean {
   const { userAgent, platform, maxTouchPoints } = navigator
-  // iPadOS 13+ se identifica como Mac pero con pantalla táctil
+  // iPadOS 13+ reports itself as a Mac with a touch screen
   return (
     /iPhone|iPad|iPod/i.test(userAgent) ||
     (platform === 'MacIntel' && maxTouchPoints > 1)
@@ -38,75 +35,71 @@ function esDispositivoIOS(): boolean {
 
 const nav = navigator as Navigator & { standalone?: boolean }
 
-/** Una sola fuente: el banner y el toast leen lo mismo. */
-let estado: Estado = {
-  evento: null,
-  instalada:
+/** Single source: the banner and the toast read the same state. */
+let state: State = {
+  event: null,
+  installed:
     nav.standalone === true || matchMedia('(display-mode: standalone)').matches,
-  pospuesto: pospuestoGuardado(),
+  postponed: isPostponed(),
 }
 
-const oyentes = new Set<() => void>()
+const listeners = new Set<() => void>()
 
-function publicar(parcial: Partial<Estado>) {
-  estado = { ...estado, ...parcial }
-  oyentes.forEach((fn) => fn())
+function publish(partial: Partial<State>) {
+  state = { ...state, ...partial }
+  listeners.forEach((fn) => fn())
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault()
-  publicar({ evento: e as BeforeInstallPromptEvent })
+  publish({ event: e as BeforeInstallPromptEvent })
 })
 
 window.addEventListener('appinstalled', () => {
-  publicar({ instalada: true, evento: null })
+  publish({ installed: true, event: null })
 })
 
-function suscribir(fn: () => void) {
-  oyentes.add(fn)
+function subscribe(fn: () => void) {
+  listeners.add(fn)
   return () => {
-    oyentes.delete(fn)
+    listeners.delete(fn)
   }
 }
 
-async function instalar() {
-  const evento = estado.evento
-  if (!evento) return
-  await evento.prompt()
-  await evento.userChoice
-  publicar({ evento: null })
+async function install() {
+  const event = state.event
+  if (!event) return
+  await event.prompt()
+  await event.userChoice
+  publish({ event: null })
 }
 
-/** "Ahora no": no volver a preguntar durante 7 días. */
-function posponer() {
-  try {
-    localStorage.setItem(CLAVE_POSPUESTO, String(Date.now()))
-  } catch {
-    // Modo privado: el pospuesto dura solo en esta visita
-  }
-  publicar({ pospuesto: true })
+/** "Not now": don't ask again for 7 days. */
+function postpone() {
+  writeStorage(POSTPONED_KEY, String(Date.now()))
+  publish({ postponed: true })
 }
 
 /**
- * Detecta si la app puede instalarse y expone el estado de la invitación.
+ * Detects whether the app can be installed and exposes the invitation state.
  *
- * - `puedeInstalar`: Chrome/Edge/Android emiten `beforeinstallprompt`.
- * - `esIOS`: Safari en iPhone/iPad no lo emite, así que hay que guiar al
- *   usuario a "Compartir → Añadir a pantalla de inicio".
+ * - `canInstall`: Chrome/Edge/Android fire `beforeinstallprompt`.
+ * - `isIOS`: Safari on iPhone/iPad does not, so the user is guided to
+ *   "Share → Add to Home Screen".
  */
 export function useInstallPrompt() {
-  const { evento, instalada, pospuesto } = useSyncExternalStore(
-    suscribir,
-    () => estado,
-    () => estado,
+  const { event, installed, postponed } = useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => state,
   )
-  const ios = esDispositivoIOS()
+  const ios = isIOSDevice()
 
   return {
-    disponible: !instalada && !pospuesto && (evento !== null || ios),
-    puedeInstalar: evento !== null,
-    esIOS: ios,
-    instalar,
-    posponer,
+    available: !installed && !postponed && (event !== null || ios),
+    canInstall: event !== null,
+    isIOS: ios,
+    install,
+    postpone,
   }
 }

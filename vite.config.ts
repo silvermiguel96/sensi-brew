@@ -109,7 +109,7 @@ export default defineConfig({
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-motion'
           }
-          if (id.includes('src/data/beers.json')) {
+          if (/src\/data\/beers-\d{4}\.json/.test(id)) {
             return 'beers-data'
           }
         },

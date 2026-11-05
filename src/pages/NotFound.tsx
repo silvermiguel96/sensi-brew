@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, Compass } from 'lucide-react'
 
-/** Página 404 con estilo consistente con el resto de la app. */
+/** 404 page styled consistently with the rest of the app. */
 export function NotFound() {
   const reduceMotion = useReducedMotion()
 
@@ -28,7 +28,7 @@ export function NotFound() {
         <h1 className="mt-3 text-xl font-semibold text-sb-text">
           Esta ruta no existe
         </h1>
-        <p className="text-balance-es mx-auto mt-2 max-w-sm text-sm leading-relaxed text-sb-muted">
+        <p className="text-balance mx-auto mt-2 max-w-sm text-sm leading-relaxed text-sb-muted">
           Puede que el enlace esté anticuado o que la dirección tenga un error.
           El catálogo completo te espera.
         </p>

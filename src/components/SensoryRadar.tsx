@@ -1,4 +1,4 @@
-import type { RadarIntensidad } from '../types/beer'
+import type { SensoryIntensity } from '../types/beer'
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -9,30 +9,30 @@ import {
 } from 'recharts'
 import { motion, useReducedMotion } from 'framer-motion'
 
-const EJES: Array<{ key: keyof RadarIntensidad; label: string }> = [
-  { key: 'amargor', label: 'Amargor' },
-  { key: 'malta', label: 'Malta' },
-  { key: 'lupulo', label: 'Lúpulo' },
-  { key: 'cuerpo', label: 'Cuerpo' },
-  { key: 'carbonatacion', label: 'Carbonatación' },
-  { key: 'esteres_frutales', label: 'Ésteres' },
+const AXES: Array<{ key: keyof SensoryIntensity; label: string }> = [
+  { key: 'bitterness', label: 'Amargor' },
+  { key: 'malt', label: 'Malta' },
+  { key: 'hops', label: 'Lúpulo' },
+  { key: 'body', label: 'Cuerpo' },
+  { key: 'carbonation', label: 'Carbonatación' },
+  { key: 'fruityEsters', label: 'Ésteres' },
 ]
 
-interface RadarPerfilProps {
-  perfil: RadarIntensidad
+interface SensoryRadarProps {
+  intensity: SensoryIntensity
   height?: number
 }
 
 /**
- * Radar sensorial (Recharts). La animación se aplica al contenedor,
- * nunca a los <path> internos de Recharts, para evitar conflictos.
+ * Sensory radar (Recharts). The animation is applied to the container,
+ * never to Recharts' internal <path> elements, to avoid conflicts.
  */
-export function RadarPerfil({ perfil, height = 300 }: RadarPerfilProps) {
+export function SensoryRadar({ intensity, height = 300 }: SensoryRadarProps) {
   const reduceMotion = useReducedMotion()
 
-  const data = EJES.map((eje) => ({
-    eje: eje.label,
-    valor: perfil[eje.key],
+  const data = AXES.map((axis) => ({
+    axis: axis.label,
+    value: intensity[axis.key],
   }))
 
   return (
@@ -47,12 +47,12 @@ export function RadarPerfil({ perfil, height = 300 }: RadarPerfilProps) {
         <RadarChart data={data} outerRadius="72%" margin={{ top: 8, right: 24, bottom: 8, left: 24 }}>
           <PolarGrid stroke="#27272a" strokeDasharray="3 4" />
           <PolarAngleAxis
-            dataKey="eje"
+            dataKey="axis"
             tick={{ fill: '#a1a1aa', fontSize: 11, fontWeight: 500 }}
           />
           <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} />
           <Radar
-            dataKey="valor"
+            dataKey="value"
             stroke="#fbbf24"
             strokeWidth={2}
             fill="#fbbf24"

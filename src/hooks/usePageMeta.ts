@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
 /**
- * Pone el título y la meta description de la pestaña.
- * Si alguno es null, no toca el documento. Al salir, restaura ambos.
+ * Sets the tab title and meta description.
+ * If either is null the document is left untouched. Both are restored on unmount.
  */
-export function useMetaPagina(title: string | null, description: string | null) {
+export function usePageMeta(title: string | null, description: string | null) {
   useEffect(() => {
     if (!title || !description) return
     const prevTitle = document.title

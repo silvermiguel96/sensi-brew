@@ -1,25 +1,25 @@
 import { useRef, useState } from 'react'
-import type { PerfilSensorial } from '../../types/beer'
+import type { SensoryProfile } from '../types/beer'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Coffee, Eye, Waves, Wind } from 'lucide-react'
 
 const TABS = [
-  { key: 'apariencia', label: 'Apariencia', icon: Eye },
+  { key: 'appearance', label: 'Apariencia', icon: Eye },
   { key: 'aroma', label: 'Aroma', icon: Wind },
-  { key: 'sabor', label: 'Sabor', icon: Coffee },
-  { key: 'sensacion_boca', label: 'En boca', icon: Waves },
+  { key: 'flavor', label: 'Sabor', icon: Coffee },
+  { key: 'mouthfeel', label: 'En boca', icon: Waves },
 ] as const
 
 type TabKey = (typeof TABS)[number]['key']
 
 interface SensoryTabsProps {
-  perfil: PerfilSensorial
+  profile: SensoryProfile
 }
 
-/** Tabs compactos para condensar apariencia, aroma, sabor y sensación en boca. */
-export function SensoryTabs({ perfil }: SensoryTabsProps) {
+/** Compact tabs condensing appearance, aroma, flavor and mouthfeel. */
+export function SensoryTabs({ profile }: SensoryTabsProps) {
   const reduceMotion = useReducedMotion()
-  const [active, setActive] = useState<TabKey>('apariencia')
+  const [active, setActive] = useState<TabKey>('appearance')
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
 
   const activeIndex = TABS.findIndex((t) => t.key === active)
@@ -93,7 +93,7 @@ export function SensoryTabs({ perfil }: SensoryTabsProps) {
             transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
           >
             <p className="text-pretty text-sm leading-relaxed text-sb-body">
-              {perfil[active]}
+              {profile[active]}
             </p>
           </motion.div>
         </AnimatePresence>

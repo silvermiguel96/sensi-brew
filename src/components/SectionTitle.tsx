@@ -7,7 +7,7 @@ interface SectionTitleProps {
   hint?: string
 }
 
-/** Título de sección con icono, usado en la vista de detalle. */
+/** Section title with an optional icon, used on the detail view. */
 export function SectionTitle({ icon, title, hint }: SectionTitleProps) {
   const reduceMotion = useReducedMotion()
 

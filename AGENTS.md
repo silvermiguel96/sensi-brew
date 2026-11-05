@@ -1,69 +1,137 @@
-# SensiBrew — Instrucciones del proyecto
+# SensiBrew — Development rules for AI agents
 
-## Principio rector: KISS (Keep It Simple, Stupid)
+Single source of truth for any AI (Cursor, Claude Code, opencode…) working on
+this repo. Read it fully before changing anything. If a request conflicts with
+these rules, point out the conflict and ask.
 
-- Aplica siempre **la solución más simple que funcione**. Si dudas entre dos
-  caminos, elige el que tenga menos piezas.
-- **Sin abstracciones prematuras**: no crees capas, servicios, contextos,
-  hooks genéricos ni helpers "por si acaso". Primero el código directo; se
-  extrae cuando duela repetirlo tres veces.
-- **Un solo modo de hacer cada cosa**: reutiliza lo que ya existe en el
-  proyecto antes de introducir un patrón nuevo.
-- **Dependencias nuevas solo si eliminan complejidad real.** Justifícalas en
-  la respuesta. Si se resuelve con CSS, datos estáticos o 20 líneas de TS, no
-  instales nada.
-- Prefiere **datos estáticos y CSS generado** antes que base de datos, APIs o
-  assets de imagen.
-- Cambios pequeños y revisables: no refactorices lo que no te pidieron.
+## 1. Guiding principle: KISS
 
-## Contexto real del proyecto (¡no es Next.js!)
+- Always ship **the simplest solution that works**. Between two options, pick
+  the one with fewer moving parts.
+- **No premature abstractions**: no layers, services, contexts, generic hooks
+  or "just in case" helpers. Write direct code first; extract only when the
+  same logic repeats **three times**.
+- **One way to do each thing**: reuse what already exists before adding a new
+  pattern (see section 5).
+- **New dependencies only if they remove real complexity**, and justify them
+  in your answer. If CSS, static data or ~20 lines of TS solve it, install
+  nothing.
+- Prefer **static data and generated CSS/SVG/emoji** over databases, APIs or
+  image assets.
+- Small, reviewable changes. Do not refactor what was not requested.
 
-- **Vite 8 + React 19 + TypeScript estricto** (SPA, sin SSR).
-- **Tailwind CSS v4** (`@import 'tailwindcss'` + `@theme`, sin `tailwind.config`).
+## 2. Stack (this is NOT Next.js)
+
+- **Vite 8 + React 19 + strict TypeScript** (SPA, no SSR).
+- **Tailwind CSS v4** (`@import 'tailwindcss'` + `@theme` in `src/index.css`,
+  no `tailwind.config`).
 - **vite-plugin-pwa** (Workbox precache, offline-first), **Recharts**,
   **Framer Motion**, **Lucide React**, **react-router-dom**.
-- **Sin backend, sin base de datos, sin Zod.** Los datos viven en JSON
-  estáticos dentro del bundle.
-- Catálogo: `src/data/beers.json` (modelo `Beer`).
-  Ficha showcase: `src/data/americanPaleAle.ts` (modelo `BeerStyle`).
+- **No backend, no database, no Zod, no state library.** Data is static JSON
+  bundled with the app.
 
-## Convenciones
+## 3. Language policy (strict)
 
-- Tipos e interfaces en `src/types/`; componentes funcionales nombrados.
-- UI, comentarios y JSDoc **en español**.
-- Paleta: `slate`/`zinc` de fondo + acentos `amber`/`yellow`. Nada de `gray`/`stone`.
-- Accesibilidad obligatoria en interacción: roles ARIA en tabs, teclado,
-  `focus-visible`, y respetar `prefers-reduced-motion`.
-- Animaciones con Framer Motion; nunca animar los `<path>` internos de Recharts.
-- Imágenes: generar con CSS/SVG/emoji. No añadir assets pesados sin pedirlo.
+| What | Language |
+| --- | --- |
+| Identifiers (variables, functions, types, props), file and folder names | English |
+| Comments and JSDoc | English |
+| JSON keys and enum values (`'meat'`, `'light'`) | English |
+| CSS classes/hooks, `data-*` attributes, `localStorage` keys, element ids | English |
+| Visible UI text, `aria-label`, `alt`, page titles/meta | **Spanish** |
+| Data text values (style descriptions, dish names, glass names) | **Spanish** |
+| URLs (`/estilo/:id`) | **Spanish** (public, indexed in `public/sitemap.xml`) |
 
-## Git (regla dura: solo lectura)
+Never mix languages inside an identifier (`toggleCategoria` is wrong,
+`toggleCategory` is right).
 
-- **NUNCA ejecutes `git commit`, `git push`** ni ningún comando que cree
-  historial o publique el repo (`gh repo create`, `gh release`, deploy por
-  CLI). El historial y el push los hace **siempre la persona**, aunque te lo
-  pida en el momento: recuérdale los comandos y detente ahí.
-- Tampoco hagas `git add` ni modifiques el índice: deja los cambios en el
-  working tree para que la persona los revise.
-- Solo puedes usar git en **modo lectura** cuando te lo pidan: `status`,
-  `diff`, `log`, `show`, `remote -v`.
-- Nunca reescribas historia (`push --force`, `reset --hard`, `filter-branch`)
-  ni toques credenciales, tokens o claves SSH.
+## 4. Naming conventions
 
-## Verificación (después de cada cambio)
+- `camelCase` for variables, functions, props and JSON keys.
+- `PascalCase` for components, types and interfaces.
+- `SCREAMING_SNAKE_CASE` for module-level constant tables (`SORT_ORDERS`,
+  `DISH_CATEGORIES`, `SRM_SCALE`).
+- One exported component per file, file named after it (`BeerCard.tsx`).
+- Hooks start with `use` and live in `src/hooks/`.
+- Named exports only (except `App` default export used by `main.tsx`).
+
+## 5. Project structure and existing building blocks
+
+```
+src/
+├── data/beers-2021.json   # BJCP 2021 catalog
+├── data/beers-2015.json   # BJCP 2015 catalog
+├── data/beers.ts          # catalogs, getCategories, getBeerById, searchBeers
+├── types/beer.ts          # the single data model: Beer (+ Guide, Range…)
+├── lib/srm.ts             # srmMid, srmToColor, shade, SRM_GRADIENT
+├── lib/range.ts           # formatRange
+├── lib/pairing.ts         # DISH_CATEGORIES (labels, icons, gradients)
+├── lib/storage.ts         # readStorage / writeStorage (never throw)
+├── hooks/                 # useBeers, useInstallPrompt, usePageMeta
+├── components/            # flat folder, no sub-folders
+└── pages/                 # Home, BeerDetail, NotFound
+```
+
+Reuse these instead of re-implementing:
+
+- `localStorage` → `readStorage` / `writeStorage`. Never call it directly
+  (the inline theme script in `index.html` is the only exception).
+- SRM color → `srmToColor(srmMid(range))`.
+- Page title/description → `usePageMeta`.
+- Section headings → `SectionTitle`. Primary button → `btn-accent` utility.
+  Panels → `glass-panel` utility.
+
+## 6. Data model
+
+- There is **one** model: `Beer` in `src/types/beer.ts`. Do not add parallel
+  models; extend `Beer` and both JSON files together.
+- Ranges are `[min, max]` tuples or `null` (variable). Radar intensity is 0–5.
+- `glass.type` values are Spanish and are keys of `SILHOUETTES` in
+  `BeerGlass.tsx`; adding a new glass means adding its silhouette.
+- JSON is cast with `as unknown as Beer[]` in `data/beers.ts`; keep the shape
+  in sync with the type.
+
+## 7. Styling
+
+- Use the theme tokens `sb-*` (`bg-sb-bg`, `text-sb-muted`, `border-sb-border`…)
+  so light/dark themes work. Theme switches via `html[data-theme='light']`.
+- Palette: `slate`/`zinc` backgrounds + `amber`/`yellow` accents. Never
+  `gray`/`stone`.
+- Images: generate them with CSS/SVG/emoji. No heavy assets unless asked.
+
+## 8. Accessibility and motion (mandatory)
+
+- ARIA roles on tabs (`tablist`/`tab`/`tabpanel`), arrow-key navigation,
+  `focus-visible` rings on every interactive element.
+- Respect `prefers-reduced-motion` (`useReducedMotion()` from Framer Motion
+  and the CSS media query).
+- Animate with Framer Motion; never animate Recharts' internal `<path>`
+  elements — animate the container.
+
+## 9. Git (hard rule: read-only)
+
+- **NEVER run `git commit`, `git push`**, or anything that creates history or
+  publishes the repo (`gh repo create`, `gh release`, CLI deploys). The person
+  always does history and pushes, even if asked in the moment: remind them of
+  the commands and stop there.
+- Do not run `git add`, `git mv`, `git rm` or otherwise modify the index:
+  leave changes in the working tree for review. Move files with plain `mv`.
+- Read-only git only when asked: `status`, `diff`, `log`, `show`, `remote -v`.
+- Never rewrite history (`push --force`, `reset --hard`, `filter-branch`) or
+  touch credentials, tokens or SSH keys.
+
+## 10. Verification (after every change)
 
 ```bash
 npm run check   # TypeScript + oxlint
-npm run build   # build de producción + service worker
+npm run build   # production build + service worker
 ```
 
-El hook de **Husky** (`.husky/pre-commit`) ejecuta `npm run lint && npm run build`
-automáticamente antes de cada commit: si falla, el commit se aborta. No lo
-desactives con `--no-verify` salvo causa justificada.
+A task is **not done** if `check` or `build` fail. The Husky pre-commit hook
+runs `npm run lint && npm run build`; never bypass it with `--no-verify`
+without a justified reason.
 
-No des una tarea por terminada si `check` o `build` fallan.
+## 11. Out of scope (unless explicitly requested)
 
-## Fuera de alcance (salvo petición explícita)
-
-Tests automatizados, Prettier, backend/DB, migración de los dos modelos de
-datos, y cualquier librería de UI/estado adicional.
+Automated tests, Prettier, backend/DB, i18n libraries, additional UI or state
+libraries, and new data models.

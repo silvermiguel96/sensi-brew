@@ -1,15 +1,15 @@
-import type { Maridaje } from '../types/beer'
+import type { Pairing } from '../types/beer'
 import { motion, useReducedMotion } from 'framer-motion'
 import { FlaskConical, UtensilsCrossed } from 'lucide-react'
 import { SectionTitle } from './SectionTitle'
 
-interface MaridajeCardProps {
-  maridaje: Maridaje
+interface PairingCardProps {
+  pairing: Pairing
   title?: string
 }
 
-/** Tarjeta de maridaje gastronómico con su justificación química. */
-export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: MaridajeCardProps) {
+/** Food pairing card with its chemical justification. */
+export function PairingCard({ pairing, title = 'Maridaje recomendado' }: PairingCardProps) {
   const reduceMotion = useReducedMotion()
 
   return (
@@ -26,17 +26,17 @@ export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: Marid
         title={title}
       />
 
-      <p className="text-balance-es text-xl font-semibold text-sb-accent">
-        {maridaje.plato}
+      <p className="text-balance text-xl font-semibold text-sb-accent">
+        {pairing.dish}
       </p>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {maridaje.ingredientes_clave.map((ing) => (
+        {pairing.keyIngredients.map((ingredient) => (
           <span
-            key={ing}
+            key={ingredient}
             className="rounded-full bg-sb-fill px-2.5 py-1 text-xs font-medium text-sb-body"
           >
-            {ing}
+            {ingredient}
           </span>
         ))}
       </div>
@@ -47,7 +47,7 @@ export function MaridajeCard({ maridaje, title = 'Maridaje recomendado' }: Marid
           Justificación química
         </p>
         <p className="text-pretty text-sm leading-relaxed text-sb-body">
-          {maridaje.justificacion_quimica}
+          {pairing.chemistry}
         </p>
       </div>
     </motion.div>

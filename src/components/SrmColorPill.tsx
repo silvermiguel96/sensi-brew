@@ -6,7 +6,7 @@ interface SrmColorPillProps {
   max: number
 }
 
-/** Círculo con relleno dinámico del color HEX del estilo + etiqueta SRM. */
+/** Circle filled with the style's HEX color plus its SRM label. */
 export function SrmColorPill({ hex, min, max }: SrmColorPillProps) {
   const reduceMotion = useReducedMotion()
 

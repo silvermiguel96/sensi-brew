@@ -6,11 +6,12 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff.svg?logo=vite&logoColor=white)](https://vite.dev)
 
-PWA **offline-first** para catadores y entusiastas de la cerveza, basada en la
-**guía BJCP 2021**. Perfiles sensoriales, estadísticas vitales y **maridajes
+PWA **offline-first** para catadores y entusiastas de la cerveza, basada en las
+**guías BJCP 2015 y 2021**. Perfiles sensoriales, estadísticas vitales y **maridajes
 gastronómicos** con justificación química.
 
-Sin base de datos: el catálogo vive en `src/data/beers.json` y se empaqueta
+Sin base de datos: los catálogos viven en `src/data/beers-2021.json` y
+`src/data/beers-2015.json` y se empaquetan
 dentro del bundle, por eso **la app completa funciona sin internet** tras la
 primera visita.
 
@@ -29,8 +30,7 @@ primera visita.
 | Ruta            | Contenido                                                          |
 | --------------- | ------------------------------------------------------------------ |
 | `/`             | Catálogo con buscador por estilo, categoría, descriptor o plato   |
-| `/estilo/18B`   | Ficha showcase (modelo `BeerStyle`) con tabs de maridaje          |
-| `/estilo/:id`   | Ficha food-first (modelo `Beer`: 1A, 21A, 20B, 10A)               |
+| `/estilo/:id`   | Ficha food-first del estilo en la guía activa (ej. `/estilo/18B`) |
 
 ## Comandos
 
@@ -83,23 +83,21 @@ No hay variables de entorno ni funciones serverless: es 100 % estático.
 
 ```
 src/
-├── data/beers.json        # catálogo de estilos BJCP (añade estilos aquí)
+├── data/beers-2021.json   # catálogo BJCP 2021 (añade estilos aquí)
+├── data/beers-2015.json   # catálogo BJCP 2015
 ├── data/beers.ts          # acceso tipado + búsqueda/filtrado
-├── data/americanPaleAle.ts# objeto demo del nuevo modelo BeerStyle (18B)
-├── types/beer.ts          # modelo actual (Beer, PerfilSensorial, Maridaje…)
-├── types/beerStyle.ts     # nuevo modelo (BeerStyle, SensoryProfile, FoodPairing…)
+├── types/beer.ts          # modelo único (Beer, SensoryProfile, Pairing…)
 ├── lib/srm.ts             # escala SRM → colores CSS
-├── lib/pairing.ts         # configuración visual de categorías de maridaje
-├── hooks/useBeers.ts      # estado del buscador
-├── components/            # BeerCard, BeerGlass, RadarPerfil, VitalesBar…
-├── components/food/       # SuggestedDishes (carrusel), SensoryTabs
-├── components/beerstyle/  # ficha showcase: BeerStyleDetail, PairingTabs…
-└── pages/                 # Home, BeerDetail (food-first) y BeerStylePage
+├── lib/pairing.ts         # configuración visual de categorías de platos
+├── lib/storage.ts         # localStorage seguro (modo privado)
+├── hooks/                 # useBeers, useInstallPrompt, usePageMeta
+├── components/            # BeerCard, BeerGlass, SensoryRadar, VitalStats, SuggestedDishes…
+└── pages/                 # Home, BeerDetail y NotFound
 ```
 
 ## Añadir un estilo
 
-Edita `src/data/beers.json` con la forma `Beer` de `src/types/beer.ts`: rangos
+Edita el JSON de la guía con la forma `Beer` de `src/types/beer.ts`: rangos
 vitales `[mín, máx]`, radar 0–5 y los platos sugeridos con su categoría,
 afinidad y principio de maridaje. Aparece automáticamente en el catálogo, el
 buscador y la navegación.
@@ -108,8 +106,8 @@ buscador y la navegación.
 
 El proyecto incluye [`AGENTS.md`](./AGENTS.md): cualquier IA que trabaje aquí
 debe aplicar el principio **KISS** (soluciones simples, sin abstracciones
-prematuras) y verificar con `npm run check` antes de dar una tarea por
-terminada.
+prematuras), escribir el código en inglés (la UI sigue en español) y verificar
+con `npm run check` y `npm run build` antes de dar una tarea por terminada.
 
 ## Licencia
 

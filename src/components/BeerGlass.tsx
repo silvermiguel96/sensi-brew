@@ -3,42 +3,41 @@ import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { shade, srmToColor } from '../lib/srm'
 
 interface BeerGlassProps {
-  /** Valor SRM usado para pintar el líquido (si no se pasa `hex`). */
+  /** SRM value used to paint the liquid. */
   srm?: number
-  /** Color HEX exacto que sobrescribe la escala SRM. */
-  hex?: string
-  /** Nombre exacto de `tipo_vaso.tipo`. Sin valor, queda la copa genérica. */
-  tipo?: string
-  /** Clases de tamaño/posición externas (el componente es responsive por defecto). */
+  /** Exact `glass.type` name. Without it, the generic glass is drawn. */
+  type?: string
+  /** External size/position classes (the component is responsive by default). */
   className?: string
-  /** Muestra las burbujas ascendiendo (decorativo). */
+  /** Shows rising bubbles (decorative). */
   bubbles?: boolean
 }
 
-type Pie = 'fino' | 'corto' | 'grueso'
+type Stem = 'thin' | 'short' | 'thick'
 
-/** Cuenco con curva, más pie o asa si el vaso de verdad los tiene. */
-interface Silueta {
-  /** Trazo cerrado en coordenadas 0–1, para que escale con la caja. */
+/** Curved bowl, plus a stem or handle when the real glass has one. */
+interface Silhouette {
+  /** Closed path in 0–1 coordinates so it scales with the box. */
   d: string
   top: number
   height: number
   left: number
   width: number
-  /** Borde superior de la espuma, en % del cuenco. */
+  /** Top edge of the foam, in % of the bowl. */
   foam: number
-  pie?: Pie
-  asa?: 'normal' | 'grande'
+  stem?: Stem
+  handle?: 'normal' | 'large'
 }
 
 /**
- * Contorno clásico de cada vaso del catálogo.
- * Proporciones de Wikipedia (Beer glassware) y Dimensions.com:
- * la Pilsner es un cono casi recto (base ~88% de la boca), el Weizen
- * se curva arriba y apoya en un pie ancho, la Nonic lleva el abultamiento
- * bajo el labio. Asa y pie viven dentro de la caja: la tarjeta recorta lo que se sale.
+ * Classic outline of each glass in the catalog, keyed by the Spanish
+ * `glass.type` value from the data.
+ * Proportions from Wikipedia (Beer glassware) and Dimensions.com:
+ * the Pilsner is an almost straight cone (base ~88% of the mouth), the Weizen
+ * curves at the top over a wide foot, the Nonic has its bulge below the lip.
+ * Handle and stem live inside the box: the card clips anything outside it.
  */
-const SILUETAS: Record<string, Silueta> = {
+const SILHOUETTES: Record<string, Silhouette> = {
   'Copa Pilsner': {
     d: 'M0.08 0.02H0.92L0.86 0.86Q0.84 0.98 0.74 0.98H0.26Q0.16 0.98 0.14 0.86L0.08 0.02Z',
     top: 0,
@@ -102,7 +101,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 34,
     width: 32,
     foam: 8,
-    pie: 'fino',
+    stem: 'thin',
   },
   'Vaso Weizen': {
     d: 'M0.2 0.02C0.06 0.06 0.02 0.16 0.04 0.34C0.08 0.56 0.12 0.74 0.16 0.86Q0.18 0.98 0.28 0.98H0.72Q0.82 0.98 0.84 0.86C0.88 0.74 0.92 0.56 0.96 0.34C0.98 0.16 0.94 0.06 0.8 0.02Z',
@@ -119,7 +118,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 7,
     width: 86,
     foam: 8,
-    pie: 'fino',
+    stem: 'thin',
   },
   Snifter: {
     d: 'M0.34 0.04C0.18 0.14 0.04 0.34 0.04 0.55C0.04 0.8 0.22 0.98 0.42 1H0.58C0.78 0.98 0.96 0.8 0.96 0.55C0.96 0.34 0.82 0.14 0.66 0.04Z',
@@ -128,7 +127,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 4,
     width: 92,
     foam: 10,
-    pie: 'corto',
+    stem: 'short',
   },
   Teku: {
     d: 'M0.02 0.1C0.2 0.2 0.32 0.26 0.38 0.4C0.24 0.58 0.26 0.78 0.38 0.92Q0.42 1 0.46 1H0.54Q0.58 1 0.62 0.92C0.74 0.78 0.76 0.58 0.62 0.4C0.68 0.26 0.8 0.2 0.98 0.1Z',
@@ -137,7 +136,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 3,
     width: 94,
     foam: 24,
-    pie: 'fino',
+    stem: 'thin',
   },
   'Cáliz belga': {
     d: 'M0.06 0.06C0.04 0.28 0.12 0.5 0.24 0.72C0.32 0.9 0.4 1 0.46 1H0.54C0.6 1 0.68 0.9 0.76 0.72C0.88 0.5 0.96 0.28 0.94 0.06Z',
@@ -146,7 +145,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 4,
     width: 92,
     foam: 8,
-    pie: 'grueso',
+    stem: 'thick',
   },
   'Copa de vino blanco': {
     d: 'M0.36 0.04C0.18 0.16 0.08 0.4 0.2 0.68C0.28 0.9 0.4 1 0.46 1H0.54C0.6 1 0.72 0.9 0.8 0.68C0.92 0.4 0.82 0.16 0.64 0.04Z',
@@ -155,7 +154,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 13,
     width: 74,
     foam: 12,
-    pie: 'fino',
+    stem: 'thin',
   },
   'Copa cuenco (Berliner)': {
     d: 'M0.04 0.18C0.02 0.42 0.16 0.82 0.4 0.98H0.6C0.84 0.82 0.98 0.42 0.96 0.18Z',
@@ -164,7 +163,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 2,
     width: 96,
     foam: 22,
-    pie: 'corto',
+    stem: 'short',
   },
   Tumbler: {
     d: 'M0.08 0.04H0.92L0.8 0.82Q0.76 0.98 0.64 0.98H0.36Q0.24 0.98 0.2 0.82L0.08 0.04Z',
@@ -181,7 +180,7 @@ const SILUETAS: Record<string, Silueta> = {
     left: 2,
     width: 68,
     foam: 8,
-    asa: 'normal',
+    handle: 'normal',
   },
   'Tankard (jarra grande)': {
     d: 'M0.06 0.04H0.94L0.86 0.84Q0.82 0.98 0.7 0.98H0.24Q0.12 0.98 0.1 0.84L0.06 0.04Z',
@@ -190,36 +189,36 @@ const SILUETAS: Record<string, Silueta> = {
     left: 0,
     width: 72,
     foam: 8,
-    asa: 'grande',
+    handle: 'large',
   },
 }
 
-const PIE: Record<Pie, { vara: string; base: string }> = {
-  fino: { vara: 'w-[6%]', base: 'w-[42%]' },
-  corto: { vara: 'w-[10%]', base: 'w-[50%]' },
-  grueso: { vara: 'w-[14%]', base: 'w-[58%]' },
+const STEMS: Record<Stem, { rod: string; base: string }> = {
+  thin: { rod: 'w-[6%]', base: 'w-[42%]' },
+  short: { rod: 'w-[10%]', base: 'w-[50%]' },
+  thick: { rod: 'w-[14%]', base: 'w-[58%]' },
 }
 
-interface ContenidoProps {
+interface FillProps {
   color: string
   bubbles: boolean
   foam: number
-  /** true cuando la copa se muestra llena (ya en vista o movimiento reducido). */
-  lleno: boolean
-  /** false si el usuario prefiere movimiento reducido: se pinta llena, sin animar. */
-  animar: boolean
+  /** true when the glass is shown full (already in view or reduced motion). */
+  full: boolean
+  /** false when the user prefers reduced motion: painted full, no animation. */
+  animated: boolean
 }
 
 /**
- * Líquido, burbujas, espuma y brillo. El recorte del vaso lo pone el padre.
- * Se revela de abajo hacia arriba (clip-path) simulando el llenado de la copa.
+ * Liquid, bubbles, foam and shine. The parent applies the glass clipping.
+ * Revealed bottom-up (clip-path) to simulate the glass being poured.
  */
-function Contenido({ color, bubbles, foam, lleno, animar }: ContenidoProps) {
+function Fill({ color, bubbles, foam, full, animated }: FillProps) {
   return (
     <motion.div
       className="absolute inset-0"
-      initial={animar ? { clipPath: 'inset(100% 0 0 0)' } : false}
-      animate={{ clipPath: lleno ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)' }}
+      initial={animated ? { clipPath: 'inset(100% 0 0 0)' } : false}
+      animate={{ clipPath: full ? 'inset(0% 0 0 0)' : 'inset(100% 0 0 0)' }}
       transition={{ duration: 0.75, ease: [0.25, 1, 0.5, 1] }}
     >
       <div
@@ -264,64 +263,63 @@ function Contenido({ color, bubbles, foam, lleno, animar }: ContenidoProps) {
 }
 
 /**
- * Copa de cerveza dibujada 100% con CSS: líquido con gradiente SRM,
- * espuma y burbujas animadas. Cero assets de imagen => peso 0 offline.
+ * Beer glass drawn 100% with CSS: SRM gradient liquid,
+ * animated foam and bubbles. Zero image assets => zero offline weight.
  */
-export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: BeerGlassProps) {
-  const clipId = `vaso${useId().replace(/:/g, '')}`
-  const contenedorRef = useRef<HTMLDivElement>(null)
-  // La copa se llena al entrar en pantalla (una sola vez).
-  const enVista = useInView(contenedorRef, { once: true, amount: 0.4 })
+export function BeerGlass({ srm = 8, type, className = '', bubbles = true }: BeerGlassProps) {
+  const clipId = `glass${useId().replace(/:/g, '')}`
+  const containerRef = useRef<HTMLDivElement>(null)
+  // The glass fills when it enters the viewport (only once).
+  const inView = useInView(containerRef, { once: true, amount: 0.4 })
   const reduceMotion = useReducedMotion()
-  const lleno = Boolean(reduceMotion) || enVista
-  const animar = !reduceMotion
-  const color = hex ?? srmToColor(srm ?? 8)
-  const silueta = tipo ? SILUETAS[tipo] : undefined
-  const etiqueta = tipo
-    ? `${tipo}. ${hex ? `Color ${hex}` : `Color equivalente a ${srm ?? 8} SRM`}`
-    : hex
-      ? `Cerveza de color ${hex}`
-      : `Color de cerveza equivalente a ${srm ?? 8} SRM`
+  const full = Boolean(reduceMotion) || inView
+  const animated = !reduceMotion
+  const color = srmToColor(srm)
+  const silhouette = type ? SILHOUETTES[type] : undefined
+  const label = type
+    ? `${type}. Color equivalente a ${srm} SRM`
+    : `Color de cerveza equivalente a ${srm} SRM`
 
-  if (!silueta) {
+  if (!silhouette) {
     return (
       <div
-        ref={contenedorRef}
+        ref={containerRef}
         className={`relative h-48 w-32 overflow-hidden rounded-b-[2.75rem] rounded-t-lg border border-sb-border bg-sb-fill shadow-[inset_0_2px_10px_rgba(0,0,0,0.35)] ${className}`}
         role="img"
-        aria-label={etiqueta}
+        aria-label={label}
       >
-        <Contenido color={color} bubbles={bubbles} foam={15} lleno={lleno} animar={animar} />
+        <Fill color={color} bubbles={bubbles} foam={15} full={full} animated={animated} />
       </div>
     )
   }
 
-  const pie = silueta.pie ? PIE[silueta.pie] : undefined
+  const stem = silhouette.stem ? STEMS[silhouette.stem] : undefined
+  const largeHandle = silhouette.handle === 'large'
 
   return (
-    <div ref={contenedorRef} className={`relative ${className}`} role="img" aria-label={etiqueta}>
-      {pie && (
+    <div ref={containerRef} className={`relative ${className}`} role="img" aria-label={label}>
+      {stem && (
         <div
           className="absolute bottom-0 left-1/2 w-[64%] -translate-x-1/2"
-          style={{ top: `${silueta.top + silueta.height - 2}%` }}
+          style={{ top: `${silhouette.top + silhouette.height - 2}%` }}
           aria-hidden
         >
-          <div className={`mx-auto h-[88%] bg-zinc-200/50 ${pie.vara}`} />
+          <div className={`mx-auto h-[88%] bg-zinc-200/50 ${stem.rod}`} />
           <div
-            className={`absolute bottom-0 left-1/2 h-[14%] -translate-x-1/2 rounded-[50%] bg-zinc-200/60 ${pie.base}`}
+            className={`absolute bottom-0 left-1/2 h-[14%] -translate-x-1/2 rounded-[50%] bg-zinc-200/60 ${stem.base}`}
           />
         </div>
       )}
 
-      {silueta.asa && (
+      {silhouette.handle && (
         <div
           aria-hidden
           className="absolute rounded-r-full border-y-2 border-r-2 border-zinc-200/60"
           style={{
-            left: `${silueta.left + silueta.width - 6}%`,
-            top: `${silueta.top + silueta.height * (silueta.asa === 'grande' ? 0.22 : 0.18)}%`,
-            height: `${silueta.height * (silueta.asa === 'grande' ? 0.48 : 0.42)}%`,
-            width: silueta.asa === 'grande' ? '24%' : '20%',
+            left: `${silhouette.left + silhouette.width - 6}%`,
+            top: `${silhouette.top + silhouette.height * (largeHandle ? 0.22 : 0.18)}%`,
+            height: `${silhouette.height * (largeHandle ? 0.48 : 0.42)}%`,
+            width: largeHandle ? '24%' : '20%',
           }}
         />
       )}
@@ -329,22 +327,22 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
       <svg width="0" height="0" className="absolute" aria-hidden>
         <defs>
           <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-            <path d={silueta.d} />
+            <path d={silhouette.d} />
           </clipPath>
         </defs>
       </svg>
       <div
         className="absolute overflow-hidden bg-sb-fill"
         style={{
-          top: `${silueta.top}%`,
-          height: `${silueta.height}%`,
-          left: `${silueta.left}%`,
-          width: `${silueta.width}%`,
+          top: `${silhouette.top}%`,
+          height: `${silhouette.height}%`,
+          left: `${silhouette.left}%`,
+          width: `${silhouette.width}%`,
           clipPath: `url(#${clipId})`,
         }}
       >
-        <Contenido color={color} bubbles={bubbles} foam={silueta.foam} lleno={lleno} animar={animar} />
-        {!silueta.pie && (
+        <Fill color={color} bubbles={bubbles} foam={silhouette.foam} full={full} animated={animated} />
+        {!silhouette.stem && (
           <div className="absolute inset-x-0 bottom-0 h-[11%] bg-zinc-200/40" aria-hidden />
         )}
       </div>
@@ -354,16 +352,16 @@ export function BeerGlass({ srm, hex, tipo, className = '', bubbles = true }: Be
         viewBox="0 0 1 1"
         preserveAspectRatio="none"
         style={{
-          top: `${silueta.top}%`,
-          height: `${silueta.height}%`,
-          left: `${silueta.left}%`,
-          width: `${silueta.width}%`,
+          top: `${silhouette.top}%`,
+          height: `${silhouette.height}%`,
+          left: `${silhouette.left}%`,
+          width: `${silhouette.width}%`,
         }}
       >
         <path
-          d={silueta.d}
+          d={silhouette.d}
           fill="none"
-          className="vaso-contorno"
+          className="glass-outline"
           strokeWidth="1.4"
           vectorEffect="non-scaling-stroke"
           strokeLinejoin="round"
